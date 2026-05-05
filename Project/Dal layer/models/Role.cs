@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace Dal_layer.Models
 {
-    internal class Role
+    public enum Role
     {
+        Admin,
+        Subscriber,
+        FreeUser
     }
 }
