@@ -478,6 +478,15 @@
             "rid": "win"
           }
         }
+      },
+      "Dal/1.0.0": {
+        "type": "project",
+        "compile": {
+          "bin/placeholder/Dal.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Dal.dll": {}
+        }
       }
     }
   },
@@ -1589,10 +1598,16 @@
         "system.windows.extensions.nuspec",
         "useSharedDesignerContext.txt"
       ]
+    },
+    "Dal/1.0.0": {
+      "type": "project",
+      "path": "../Dal layer/Dal.csproj",
+      "msbuildProject": "../Dal layer/Dal.csproj"
     }
   },
   "projectFileDependencyGroups": {
     "net8.0": [
+      "Dal >= 1.0.0",
       "EntityFramework >= 6.5.2",
       "Npgsql.EntityFramework >= 2.2.7",
       "Swashbuckle.AspNetCore >= 6.6.2"
@@ -1630,7 +1645,11 @@
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
-          "projectReferences": {}
+          "projectReferences": {
+            "C:\\Users\\User\\Desktop\\Studies\\C-Main-Project.git\\Project\\Dal layer\\Dal.csproj": {
+              "projectPath": "C:\\Users\\User\\Desktop\\Studies\\C-Main-Project.git\\Project\\Dal layer\\Dal.csproj"
+            }
+          }
         }
       },
       "warningProperties": {

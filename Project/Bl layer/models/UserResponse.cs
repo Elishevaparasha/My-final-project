@@ -1,5 +1,5 @@
 ﻿using System;
-using Dal.Models;
+using Dal_layer.Models;
 
 namespace Bl_layer.Models
 {
@@ -15,7 +15,7 @@ namespace Bl_layer.Models
         public bool IsSubscriber { get; set; }
         public DateTime? SubscriptionExpiryDate { get; set; }
         public int MonthlyWatchedSeconds { get; set; }
-        public DateTime LastLoginDate { get; set; }
+        public DateTime? LastLoginDate { get; set; }
         public DateTime CreatedAt { get; set; }
     }
 }

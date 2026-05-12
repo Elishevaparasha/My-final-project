@@ -4,6 +4,22 @@
     "C:\\Users\\User\\Desktop\\Studies\\C-Main-Project.git\\Project\\Web Application\\Server.csproj": {}
   },
   "projects": {
+    "C:\\Users\\User\\Desktop\\Studies\\C-Main-Project.git\\Project\\Dal layer\\Dal.csproj": {
+      "restore": {
+        "projectUniqueName": "C:\\Users\\User\\Desktop\\Studies\\C-Main-Project.git\\Project\\Dal layer\\Dal.csproj",
+        "projectName": "Dal",
+        "projectPath": "C:\\Users\\User\\Desktop\\Studies\\C-Main-Project.git\\Project\\Dal layer\\Dal.csproj",
+        "UsingMicrosoftNETSdk": false,
+        "frameworks": {
+          "net472": {
+            "projectReferences": {}
+          }
+        }
+      },
+      "frameworks": {
+        "net472": {}
+      }
+    },
     "C:\\Users\\User\\Desktop\\Studies\\C-Main-Project.git\\Project\\Web Application\\Server.csproj": {
       "version": "1.0.0",
       "restore": {
@@ -32,7 +48,11 @@
         "frameworks": {
           "net8.0": {
             "targetAlias": "net8.0",
-            "projectReferences": {}
+            "projectReferences": {
+              "C:\\Users\\User\\Desktop\\Studies\\C-Main-Project.git\\Project\\Dal layer\\Dal.csproj": {
+                "projectPath": "C:\\Users\\User\\Desktop\\Studies\\C-Main-Project.git\\Project\\Dal layer\\Dal.csproj"
+              }
+            }
           }
         },
         "warningProperties": {
