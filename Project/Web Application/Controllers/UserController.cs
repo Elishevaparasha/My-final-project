@@ -100,5 +100,13 @@ namespace Web_Application.Controllers
             bool result = _userService.CanWatch(id);
             return Ok(result);
         }
+        [Authorize(Roles = "Admin")]
+        [HttpPut("make-admin/{id}")]
+        public IActionResult MakeAdmin(Guid id)
+        {
+            _userService.MakeAdmin(id);
+            return Ok("המשתמש הפך למנהל בהצלחה");
+        }
+
     }
 }

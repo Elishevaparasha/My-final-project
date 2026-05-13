@@ -180,6 +180,13 @@ namespace Bl_layer.Services
 
             return user.MonthlyWatchedSeconds < 108000;
         }
+        public void MakeAdmin(Guid id)
+        {
+            Dal_layer.Models.User user = _repository.GetById(id);
+            if (user == null) return;
+            user.Role = Dal_layer.Models.Role.Admin;
+            _repository.Update(user);
+        }
 
     }
 }
