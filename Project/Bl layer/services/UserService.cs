@@ -12,17 +12,19 @@ namespace Bl_layer.Services
     {
         private readonly UserRepository _repository;
         private readonly EmailService _emailService;
+        private readonly JwtService _jwtService;
 
-
-        public UserService()
+        public UserService(Dal_layer.AppDbContext context, string jwtSecretKey)
         {
-            _repository = new UserRepository();
+            _repository = new UserRepository(context);
             _emailService = new EmailService();
+            _jwtService = new JwtService(jwtSecretKey);
         }
 
         public UserResponse Register(RegisterRequest request)
         {
             if (_repository.GetByEmail(request.Email) != null) return null;
+            string verificationToken = Guid.NewGuid().ToString();
             Dal_layer.Models.User user = new Dal_layer.Models.User
             {
                 Id = Guid.NewGuid(),
@@ -36,23 +38,22 @@ namespace Bl_layer.Services
                 IsSubscriber = false,
                 MonthlyWatchedSeconds = 0,
                 WatchResetDate = DateTime.Now,
+                EmailVerificationToken = verificationToken,
                 CreatedAt = DateTime.Now
             };
 
             _repository.Add(user);
-            _emailService.SendVerificationEmail(user.Email);
+            _emailService.SendVerificationEmail(user.Email, verificationToken);
             return GetById(user.Id);
         }
-        public UserResponse Login(LoginRequest request)
+        public string Login(LoginRequest request)
         {
             Dal_layer.Models.User user = _repository.GetByEmail(request.Email);
 
-            // ?????? ??????? ???? ??????? ?????
             if (user == null) return null;
             if (!BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash)) return null;
             if (!user.IsEmailVerified) return null;
 
-            // ?????? ?? ???? ???? ?????
             if (user.LastLoginDate.HasValue)
             {
                 TimeSpan diff = DateTime.Now - user.LastLoginDate.Value;
@@ -65,13 +66,14 @@ namespace Bl_layer.Services
             user.LastLoginDate = DateTime.Now;
             _repository.Update(user);
 
-            return GetById(user.Id);
+            return _jwtService.GenerateToken(user);
         }
         public bool VerifyEmail(string token)
         {
-            Dal_layer.Models.User user = _repository.GetByEmail(token);
+            Dal_layer.Models.User user = _repository.GetByVerificationToken(token);
             if (user == null) return false;
             user.IsEmailVerified = true;
+            user.EmailVerificationToken = null;
             _repository.Update(user);
             return true;
         }
@@ -98,6 +100,19 @@ namespace Bl_layer.Services
         public UserResponse GetById(Guid id)
         {
             Dal_layer.Models.User user = _repository.GetById(id);
+            if (user == null) return null;
+            return MapToResponse(user);
+        }
+
+        public UserResponse GetByEmail(string email)
+        {
+            Dal_layer.Models.User user = _repository.GetByEmail(email);
+            if (user == null) return null;
+            return MapToResponse(user);
+        }
+
+        private UserResponse MapToResponse(Dal_layer.Models.User user)
+        {
             return new UserResponse
             {
                 Id = user.Id,
@@ -119,26 +134,8 @@ namespace Bl_layer.Services
         {
             List<Dal_layer.Models.User> users = _repository.GetAll();
             List<UserResponse> result = new List<UserResponse>();
-
             foreach (var user in users)
-            {
-                result.Add(new UserResponse
-                {
-                    Id = user.Id,
-                    UserName = user.UserName,
-                    FirstName = user.FirstName,
-                    LastName = user.LastName,
-                    Email = user.Email,
-                    Role = user.Role,
-                    IsEmailVerified = user.IsEmailVerified,
-                    IsSubscriber = user.IsSubscriber,
-                    SubscriptionExpiryDate = user.SubscriptionExpiryDate,
-                    MonthlyWatchedSeconds = user.MonthlyWatchedSeconds,
-                    LastLoginDate = user.LastLoginDate,
-                    CreatedAt = user.CreatedAt
-                });
-            }
-
+                result.Add(MapToResponse(user));
             return result;
         }
         public void Delete(Guid id) {

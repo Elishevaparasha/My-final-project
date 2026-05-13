@@ -9,7 +9,7 @@ namespace Bl_layer.Services
 {
     public class EmailService: IEmailService
     {
-        public void SendVerificationEmail(string email)
+        public void SendVerificationEmail(string email, string token)
         {
 
         }

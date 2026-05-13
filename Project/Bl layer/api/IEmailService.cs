@@ -8,8 +8,8 @@ namespace Bl_layer.Api
 {
     public interface IEmailService
     {
-        void SendVerificationEmail (string email);
+        void SendVerificationEmail(string email, string token);
         void SendPasswordResetEmail(string email);
-        void SendLoginVerificationEmail (string email);
+        void SendLoginVerificationEmail(string email);
     }
 }
