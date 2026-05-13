@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Bl_layer.Services;
 using Bl_layer.Models;
 using Web_Application.Models;
+using Microsoft.AspNetCore.Authorization;
 using System;
 
 namespace Web_Application.Controllers
@@ -49,7 +50,7 @@ namespace Web_Application.Controllers
             if (!result) return BadRequest("הפרטים שהוזנו שגויים");
             return Ok("הסיסמה שונתה בהצלחה");
         }
-
+        [Authorize]
         [HttpPost("change-password")]
         public IActionResult ChangePassword([FromBody] ChangePasswordRequest request)
         {
@@ -57,7 +58,7 @@ namespace Web_Application.Controllers
             if (!result) return BadRequest("הסיסמה הישנה שגויה");
             return Ok("הסיסמה שונתה בהצלחה");
         }
-
+        [Authorize]
         [HttpGet("{id}")]
         public IActionResult GetById(Guid id)
         {
@@ -65,27 +66,27 @@ namespace Web_Application.Controllers
             if (result == null) return NotFound("המשתמש לא נמצא");
             return Ok(result);
         }
-
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public IActionResult GetAll()
         {
             return Ok(_userService.GetAll());
         }
-
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public IActionResult Delete(Guid id)
         {
             _userService.Delete(id);
             return Ok("המשתמש נמחק בהצלחה");
         }
-
+        [Authorize(Roles = "Admin")]
         [HttpPut("subscription/{id}")]
         public IActionResult UpdateSubscription(Guid id, [FromBody] bool isSubscriber)
         {
             _userService.UpdateSubscription(id, isSubscriber);
             return Ok("המנוי עודכן בהצלחה");
         }
-
+        [Authorize]
         [HttpPut("watch-time/{id}")]
         public IActionResult UpdateWatchTime(Guid id, [FromBody] int seconds)
         {

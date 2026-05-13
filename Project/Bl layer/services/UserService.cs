@@ -37,15 +37,16 @@ namespace Bl_layer.Services
                 IsEmailVerified = false,
                 IsSubscriber = false,
                 MonthlyWatchedSeconds = 0,
-                WatchResetDate = DateTime.Now,
+                WatchResetDate = DateTime.UtcNow,
                 EmailVerificationToken = verificationToken,
-                CreatedAt = DateTime.Now
+                CreatedAt = DateTime.UtcNow
             };
 
             _repository.Add(user);
             _emailService.SendVerificationEmail(user.Email, verificationToken);
             return GetById(user.Id);
         }
+
         public string Login(LoginRequest request)
         {
             Dal_layer.Models.User user = _repository.GetByEmail(request.Email);
@@ -56,18 +57,19 @@ namespace Bl_layer.Services
 
             if (user.LastLoginDate.HasValue)
             {
-                TimeSpan diff = DateTime.Now - user.LastLoginDate.Value;
+                TimeSpan diff = DateTime.UtcNow - user.LastLoginDate.Value;
                 if (diff.TotalDays > 7)
                 {
                     _emailService.SendLoginVerificationEmail(user.Email);
                     return null;
                 }
             }
-            user.LastLoginDate = DateTime.Now;
+            user.LastLoginDate = DateTime.UtcNow;
             _repository.Update(user);
 
             return _jwtService.GenerateToken(user);
         }
+
         public bool VerifyEmail(string token)
         {
             Dal_layer.Models.User user = _repository.GetByVerificationToken(token);
@@ -77,6 +79,7 @@ namespace Bl_layer.Services
             _repository.Update(user);
             return true;
         }
+
         public bool ForgotPassword(ForgotPasswordRequest request)
         {
             Dal_layer.Models.User user = _repository.GetByEmail(request.Email);
@@ -88,6 +91,7 @@ namespace Bl_layer.Services
             _emailService.SendPasswordResetEmail(request.Email);
             return true;
         }
+
         public bool ChangePassword(ChangePasswordRequest request)
         {
             Dal_layer.Models.User user = _repository.GetByEmail(request.Email);
@@ -97,6 +101,7 @@ namespace Bl_layer.Services
             _repository.Update(user);
             return true;
         }
+
         public UserResponse GetById(Guid id)
         {
             Dal_layer.Models.User user = _repository.GetById(id);
@@ -138,16 +143,21 @@ namespace Bl_layer.Services
                 result.Add(MapToResponse(user));
             return result;
         }
-        public void Delete(Guid id) {
+
+        public void Delete(Guid id)
+        {
             _repository.Delete(id);
         }
 
-        public void UpdateSubscription(Guid id, bool isSubscriber) {
+        public void UpdateSubscription(Guid id, bool isSubscriber)
+        {
             Dal_layer.Models.User user = _repository.GetById(id);
             user.IsSubscriber = isSubscriber;
             _repository.Update(user);
         }
-        public void UpdateWatchTime(Guid id, int seconds) {
+
+        public void UpdateWatchTime(Guid id, int seconds)
+        {
             Dal_layer.Models.User user = _repository.GetById(id);
             user.MonthlyWatchedSeconds += seconds;
             _repository.Update(user);
