@@ -93,5 +93,12 @@ namespace Web_Application.Controllers
             _userService.UpdateWatchTime(id, seconds);
             return Ok();
         }
+        [Authorize]
+        [HttpGet("can-watch/{id}")]
+        public IActionResult CanWatch(Guid id)
+        {
+            bool result = _userService.CanWatch(id);
+            return Ok(result);
+        }
     }
 }

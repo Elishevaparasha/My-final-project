@@ -17,5 +17,7 @@ namespace Bl_layer.API
         void Delete(Guid id);
         void UpdateSubscription(Guid id, bool isSubscriber);
         void UpdateWatchTime(Guid id, int seconds);
+        bool CanWatch(Guid id);
+
     }
 }

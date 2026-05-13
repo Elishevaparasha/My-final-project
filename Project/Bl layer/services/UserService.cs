@@ -162,5 +162,24 @@ namespace Bl_layer.Services
             user.MonthlyWatchedSeconds += seconds;
             _repository.Update(user);
         }
+        public bool CanWatch(Guid id)
+        {
+            Dal_layer.Models.User user = _repository.GetById(id);
+            if (user == null) return false;
+
+            if (user.Role == Dal_layer.Models.Role.Admin || user.IsSubscriber)
+                return true;
+
+            if (DateTime.UtcNow.Month != user.WatchResetDate.Month ||
+                DateTime.UtcNow.Year != user.WatchResetDate.Year)
+            {
+                user.MonthlyWatchedSeconds = 0;
+                user.WatchResetDate = DateTime.UtcNow;
+                _repository.Update(user);
+            }
+
+            return user.MonthlyWatchedSeconds < 108000;
+        }
+
     }
 }
