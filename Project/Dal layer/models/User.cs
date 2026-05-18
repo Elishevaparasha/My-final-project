@@ -23,6 +23,7 @@ namespace Dal_layer.Models
         public DateTime? LastLoginDate { get; set; }
         public string RefreshToken { get; set; }
         public DateTime? RefreshTokenExpiry { get; set; }
+        public string EmailVerificationToken { get; set; }
         public DateTime CreatedAt { get; set; }
     }
 }
