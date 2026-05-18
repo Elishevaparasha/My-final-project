@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 .vs/
 **/.vs/
 bin/
@@ -10,3 +11,5 @@ packages/
 **/packages/
 appsettings.json
 **/appsettings.json
+=======
+>>>>>>> origin/Tali_Main

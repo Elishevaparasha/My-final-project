@@ -1,7 +1,14 @@
 .vs/
+**/.vs/
 bin/
+**/bin/
 obj/
+**/obj/
 *.user
 *.suo
 packages/
+<<<<<<< HEAD
 appsettings.json
+=======
+**/packages/
+>>>>>>> origin/Tali_Main
