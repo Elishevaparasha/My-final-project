@@ -21,8 +21,9 @@ namespace Dal_layer.Models
         public int MonthlyWatchedSeconds { get; set; }
         public DateTime WatchResetDate { get; set; }
         public DateTime? LastLoginDate { get; set; }
-        public string RefreshToken { get; set; }
+        public string? RefreshToken { get; set; }
         public DateTime? RefreshTokenExpiry { get; set; }
+        public string? EmailVerificationToken { get; set; }
         public DateTime CreatedAt { get; set; }
     }
 }

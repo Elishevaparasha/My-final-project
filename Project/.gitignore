@@ -8,3 +8,5 @@ obj/
 *.suo
 packages/
 **/packages/
+appsettings.json
+**/appsettings.json
