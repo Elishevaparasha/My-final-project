@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Bl_layer.API;
+using Bl_layer.Api;
 using Bl_layer.Models;
 using Dal_layer.Services;
 using BCrypt.Net;
@@ -11,13 +12,13 @@ namespace Bl_layer.Services
     public class UserService : IUserService
     {
         private readonly UserRepository _repository;
-        private readonly EmailService _emailService;
+        private readonly IEmailService _emailService;
         private readonly JwtService _jwtService;
 
-        public UserService(Dal_layer.AppDbContext context, string jwtSecretKey)
+        public UserService(Dal_layer.AppDbContext context, string jwtSecretKey, IEmailService emailService)
         {
             _repository = new UserRepository(context);
-            _emailService = new EmailService();
+            _emailService = emailService;
             _jwtService = new JwtService(jwtSecretKey);
         }
 

@@ -1,3 +1,5 @@
+using Bl_layer.Api;
+using Bl_layer.Models;
 using Bl_layer.Services;
 using Dal_layer;
 using Dal_layer.Services;
@@ -32,12 +34,19 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddAuthorization();
 
+// הגדרות מייל (SendGrid / Twilio)
+var emailSettings = new EmailSettings();
+builder.Configuration.GetSection("Email").Bind(emailSettings);
+builder.Services.AddSingleton(emailSettings);
+builder.Services.AddSingleton<IEmailService, EmailService>();
+
 // רישום השירותים
 builder.Services.AddScoped<UserRepository>();
 builder.Services.AddScoped<UserService>(provider =>
 {
     var context = provider.GetRequiredService<AppDbContext>();
-    return new UserService(context, jwtKey);
+    var emailService = provider.GetRequiredService<IEmailService>();
+    return new UserService(context, jwtKey, emailService);
 });
 
 var app = builder.Build();
