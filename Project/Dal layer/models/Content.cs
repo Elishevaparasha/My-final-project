@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace Dal_layer.Models
 {
@@ -8,6 +9,9 @@ namespace Dal_layer.Models
         public string Title { get; set; }
         public string Description { get; set; }
         public string AuthorId { get; set; }
-        public DateTime CreatedAt { get; set; }
+        public DateTime UploadDate { get; set; }
+        public string IsPremium { get; set; }
+
+        public int LikeCounts { get; set; }
     }
 }
