@@ -1,0 +1,37 @@
+@if (loading()) {
+  <p class="muted">טוען...</p>
+} @else if (error()) {
+  <p class="error">{{ error() }}</p>
+  <a routerLink="/videos">חזרה לרשימה</a>
+} @else {
+  @if (item(); as c) {
+  <article class="detail">
+    <div class="actions-top">
+      <a [routerLink]="listRoute()" class="back">← חזרה</a>
+      @if (auth.isAdmin()) {
+        <div class="admin-actions">
+          <a [routerLink]="['/content', c.id, 'edit']" class="btn btn-outline">עריכה</a>
+          <button type="button" class="btn btn-danger" (click)="deleteItem()">מחיקה</button>
+        </div>
+      }
+    </div>
+    <span class="badge">{{ c.contentType }}</span>
+    <h1>{{ c.title }}</h1>
+    <p class="desc">{{ c.description }}</p>
+    <p class="meta">תאריך: {{ c.uploadDate | date: 'dd/MM/yyyy' }}</p>
+
+    @if (c.contentType === 'Video' && c.videoUrl) {
+      <div class="video-wrap">
+        <iframe [src]="c.videoUrl" [title]="c.title" allowfullscreen></iframe>
+      </div>
+      @if (c.durationSeconds) {
+        <p class="meta">אורך: {{ c.durationSeconds }} שניות</p>
+      }
+    }
+
+    @if (c.contentType === 'Article' && c.body) {
+      <div class="article-body" [innerHTML]="c.body"></div>
+    }
+  </article>
+  }
+}

@@ -1,0 +1,5 @@
+<div class="auth-card">
+  <h1>אימות מייל</h1>
+  <p [class.error]="isError()" [class.success]="!isError()">{{ message() }}</p>
+  <p class="links"><a routerLink="/login">להתחברות</a></p>
+</div>

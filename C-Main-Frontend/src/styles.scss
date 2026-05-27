@@ -1,0 +1,93 @@
+@use 'app/shared/styles/auth-card';
+
+:root {
+  --nav-blue-light: #1e40af;
+  --nav-blue-dark: #1e3a8a;
+  --nav-blue-deep: #172554;
+  --text-primary: #f8fafc;
+  --text-muted: #bfdbfe;
+  --accent-light: #93c5fd;
+  --surface: rgba(30, 64, 175, 0.55);
+  --surface-card: rgba(30, 58, 138, 0.85);
+  --border: rgba(147, 197, 253, 0.35);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(180deg, var(--nav-blue-light) 0%, var(--nav-blue-dark) 45%, var(--nav-blue-deep) 100%);
+  background-attachment: fixed;
+  color: var(--text-primary);
+}
+
+a {
+  color: var(--accent-light);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font: inherit;
+  font-size: 0.9rem;
+  cursor: pointer;
+  text-decoration: none;
+  border: none;
+  transition: background 0.15s;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.btn-primary {
+  background: var(--nav-blue-light);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+
+  &:hover:not(:disabled) {
+    background: #2563eb;
+  }
+}
+
+.btn-outline {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-primary);
+  border: 1px solid rgba(255, 255, 255, 0.45);
+
+  &:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.18);
+  }
+}
+
+.btn-danger {
+  background: #dc2626;
+  color: #fff;
+
+  &:hover:not(:disabled) {
+    background: #b91c1c;
+  }
+}
+
+.error {
+  color: #dc2626;
+}
+
+.success {
+  color: #16a34a;
+}
+
+.muted {
+  color: var(--text-muted);
+}

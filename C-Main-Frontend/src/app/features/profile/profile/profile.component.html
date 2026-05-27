@@ -1,0 +1,35 @@
+<h1>פרופיל</h1>
+
+@if (profile(); as p) {
+  <section class="card">
+    <p><strong>שם:</strong> {{ p.firstName }} {{ p.lastName }}</p>
+    <p><strong>אימייל:</strong> {{ p.email }}</p>
+    <p><strong>מייל מאומת:</strong> {{ p.isEmailVerified ? 'כן' : 'לא' }}</p>
+    <p><strong>מנוי:</strong> {{ p.isSubscriber ? 'כן' : 'לא' }}</p>
+    <p><strong>צפייה החודש:</strong> {{ p.monthlyWatchedSeconds }} שניות</p>
+    @if (canWatch() !== null) {
+      <p><strong>מותר לצפות:</strong> {{ canWatch() ? 'כן' : 'לא' }}</p>
+    }
+  </section>
+}
+
+<section class="card">
+  <h2>שינוי סיסמה</h2>
+  <form [formGroup]="passwordForm" (ngSubmit)="changePassword()">
+    <label>
+      סיסמה נוכחית
+      <input type="password" formControlName="oldPassword" />
+    </label>
+    <label>
+      סיסמה חדשה
+      <input type="password" formControlName="newPassword" />
+    </label>
+    @if (pwdError()) {
+      <p class="error">{{ pwdError() }}</p>
+    }
+    @if (pwdMessage()) {
+      <p class="success">{{ pwdMessage() }}</p>
+    }
+    <button type="submit" class="btn btn-primary">עדכון סיסמה</button>
+  </form>
+</section>

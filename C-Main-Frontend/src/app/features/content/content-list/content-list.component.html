@@ -1,0 +1,36 @@
+<div class="page-header">
+  <h1>{{ pageTitle() }}</h1>
+  @if (auth.isAdmin()) {
+    <a routerLink="/content/new" class="btn btn-primary">+ תוכן חדש</a>
+  }
+</div>
+
+<input
+  type="search"
+  class="search"
+  [formControl]="searchControl"
+  placeholder="חיפוש לפי כותרת..."
+/>
+
+@if (loading()) {
+  <p class="muted">טוען...</p>
+} @else if (error()) {
+  <p class="error">{{ error() }}</p>
+} @else if (items().length === 0) {
+  <p class="muted">אין תוכן להצגה</p>
+} @else {
+  <div class="grid">
+    @for (item of items(); track item.id) {
+      <a [routerLink]="['/content', item.id]" class="card">
+        @if (item.thumbnailUrl) {
+          <img [src]="item.thumbnailUrl" [alt]="item.title" />
+        }
+        <div class="card-body">
+          <span class="badge">{{ item.contentType }}</span>
+          <h2>{{ item.title }}</h2>
+          <p>{{ item.description }}</p>
+        </div>
+      </a>
+    }
+  </div>
+}
