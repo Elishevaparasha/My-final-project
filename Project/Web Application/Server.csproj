@@ -8,17 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Api\**" />
-    <Compile Remove="Services\**" />
-    <Content Remove="Api\**" />
-    <Content Remove="Services\**" />
-    <EmbeddedResource Remove="Api\**" />
-    <EmbeddedResource Remove="Services\**" />
-    <None Remove="Api\**" />
-    <None Remove="Services\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="EFCore.NamingConventions" Version="8.0.0" />
     <PackageReference Include="EntityFramework" Version="6.5.2" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.0" />

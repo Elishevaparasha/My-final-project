@@ -1,15 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-<<<<<<< HEAD
-    <OutputType>Library</OutputType>
-=======
->>>>>>> origin/Tali_Main
     <TargetFramework>net8.0</TargetFramework>
     <RootNamespace>Bl_layer</RootNamespace>
     <AssemblyName>Bl layer</AssemblyName>
     <Nullable>enable</Nullable>
-<<<<<<< HEAD
+    <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
   <ItemGroup>
@@ -21,12 +17,6 @@
   </ItemGroup>
 
   <ItemGroup>
-=======
-    <ImplicitUsings>enable</ImplicitUsings>
-  </PropertyGroup>
-
-  <ItemGroup>
->>>>>>> origin/Tali_Main
     <ProjectReference Include="..\Dal layer\Dal.csproj" />
   </ItemGroup>
 

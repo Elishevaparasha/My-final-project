@@ -7,8 +7,6 @@ obj/
 *.user
 *.suo
 packages/
-<<<<<<< HEAD
-appsettings.json
-=======
 **/packages/
->>>>>>> origin/Tali_Main
+appsettings.json
+**/appsettings.json

@@ -32,10 +32,6 @@ namespace Dal_layer
             modelBuilder.Entity<User>().Property(u => u.EmailVerificationToken).HasColumnName("email_verification_token");
             modelBuilder.Entity<User>().Property(u => u.CreatedAt).HasColumnName("created_at");
 
-<<<<<<< HEAD
-            modelBuilder.Entity<Video>().ToTable("videos");
-            modelBuilder.Entity<Article>().ToTable("articles");
-=======
             modelBuilder.Entity<Content>().ToTable("contents");
             modelBuilder.Entity<Content>().Property(c => c.Id).HasColumnName("id");
             modelBuilder.Entity<Content>().Property(c => c.Title).HasColumnName("title");
@@ -50,7 +46,6 @@ namespace Dal_layer
             modelBuilder.Entity<Article>().ToTable("articles");
             modelBuilder.Entity<Article>().Property(a => a.ThumbnailUrl).HasColumnName("thumbnail_url");
             modelBuilder.Entity<Article>().Property(a => a.Body).HasColumnName("body");
->>>>>>> origin/Tali_Main
         }
     }
 }

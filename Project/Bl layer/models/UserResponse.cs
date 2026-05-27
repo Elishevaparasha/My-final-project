@@ -1,8 +1,3 @@
-<<<<<<< HEAD
-﻿using System;
-=======
-using System;
->>>>>>> origin/Tali_Main
 using Dal_layer.Models;
 
 namespace Bl_layer.Models
