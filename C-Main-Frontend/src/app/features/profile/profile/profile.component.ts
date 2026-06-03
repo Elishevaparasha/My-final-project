@@ -3,11 +3,12 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../../core/services/auth.service';
 import { UserService } from '../../../core/services/user.service';
 import { UserResponse } from '../../../core/models/api.models';
+import { WatchTimePipe } from '../../../core/utils/watch-time.pipe';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, WatchTimePipe],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss',
 })

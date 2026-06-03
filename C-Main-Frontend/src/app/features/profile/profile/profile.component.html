@@ -6,9 +6,12 @@
     <p><strong>אימייל:</strong> {{ p.email }}</p>
     <p><strong>מייל מאומת:</strong> {{ p.isEmailVerified ? 'כן' : 'לא' }}</p>
     <p><strong>מנוי:</strong> {{ p.isSubscriber ? 'כן' : 'לא' }}</p>
-    <p><strong>צפייה החודש:</strong> {{ p.monthlyWatchedSeconds }} שניות</p>
+    <p><strong>צפייה החודש:</strong> {{ p.monthlyWatchedSeconds | watchTime }}</p>
     @if (canWatch() !== null) {
-      <p><strong>מותר לצפות:</strong> {{ canWatch() ? 'כן' : 'לא' }}</p>
+      <p>
+        <strong>מגבלת צפייה חינמית:</strong>
+        {{ canWatch() ? '✅ עדיין זמינה' : '🔒 הגעת ל-30 שעות החודש' }}
+      </p>
     }
   </section>
 }

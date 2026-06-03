@@ -5,12 +5,24 @@
   }
 </div>
 
-<input
-  type="search"
-  class="search"
-  [formControl]="searchControl"
-  placeholder="חיפוש לפי כותרת..."
-/>
+<div class="toolbar">
+  <input
+    type="search"
+    class="search"
+    [formControl]="searchControl"
+    placeholder="חיפוש לפי כותרת..."
+  />
+
+  <div class="sort-group">
+    <button class="sort-btn" [class.active]="sortKey() === 'date-desc'" (click)="setSort('date-desc')">🕒 חדש</button>
+    <button class="sort-btn" [class.active]="sortKey() === 'date-asc'"  (click)="setSort('date-asc')">🕒 ישן</button>
+    <button class="sort-btn" [class.active]="sortKey() === 'title-asc'" (click)="setSort('title-asc')">א-ת</button>
+    <button class="sort-btn" [class.active]="sortKey() === 'title-desc'"(click)="setSort('title-desc')">ת-א</button>
+    <button class="sort-btn star-filter" [class.active]="showStarredOnly()" (click)="toggleStarredFilter()">
+      {{ showStarredOnly() ? '★' : '☆' }} שמורים
+    </button>
+  </div>
+</div>
 
 @if (loading()) {
   <p class="muted">טוען...</p>
@@ -22,13 +34,20 @@
   <div class="grid">
     @for (item of items(); track item.id) {
       <a [routerLink]="['/content', item.id]" class="card">
+        <button
+          class="star-btn"
+          [class.starred]="localData.isStarred(item.id)"
+          (click)="toggleStar($event, item.id)"
+          title="{{ localData.isStarred(item.id) ? 'הסר מהשמורים' : 'שמור' }}"
+        >{{ localData.isStarred(item.id) ? '★' : '☆' }}</button>
         @if (item.thumbnailUrl) {
           <img [src]="item.thumbnailUrl" [alt]="item.title" />
         }
         <div class="card-body">
-          <span class="badge">{{ item.contentType }}</span>
+          <span class="badge">{{ item.contentType === 'Video' ? '🎬 וידאו' : '📄 מאמר' }}</span>
           <h2>{{ item.title }}</h2>
           <p>{{ item.description }}</p>
+          <span class="card-date">{{ item.uploadDate | date: 'dd/MM/yyyy' }}</span>
         </div>
       </a>
     }

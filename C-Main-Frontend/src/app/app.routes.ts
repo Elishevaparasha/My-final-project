@@ -59,6 +59,14 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'saved',
+        loadComponent: () =>
+          import('./features/content/content-list/content-list.component').then(
+            (m) => m.ContentListComponent,
+          ),
+        data: { pageTitle: '★ שמורים', showStarred: true },
+      },
+      {
         path: 'profile',
         canActivate: [authGuard],
         loadComponent: () =>

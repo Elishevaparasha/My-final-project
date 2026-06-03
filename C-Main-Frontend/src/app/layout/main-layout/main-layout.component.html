@@ -4,6 +4,7 @@
     <a routerLink="/videos" routerLinkActive="active">סרטונים</a>
     <a routerLink="/articles" routerLinkActive="active">כתבות</a>
     @if (auth.isLoggedIn()) {
+      <a routerLink="/saved" routerLinkActive="active">★ שמורים</a>
       <a routerLink="/profile" routerLinkActive="active">פרופיל</a>
     }
     @if (auth.isAdmin()) {

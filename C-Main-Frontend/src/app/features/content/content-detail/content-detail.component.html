@@ -6,6 +6,8 @@
 } @else {
   @if (item(); as c) {
   <article class="detail">
+
+    <!-- Top bar -->
     <div class="actions-top">
       <a [routerLink]="listRoute()" class="back">← חזרה</a>
       @if (auth.isAdmin()) {
@@ -15,23 +17,114 @@
         </div>
       }
     </div>
-    <span class="badge">{{ c.contentType }}</span>
+
+    <!-- Header -->
+    <span class="badge">{{ c.contentType === 'Video' ? '🎬 וידאו' : '📄 מאמר' }}</span>
     <h1>{{ c.title }}</h1>
     <p class="desc">{{ c.description }}</p>
     <p class="meta">תאריך: {{ c.uploadDate | date: 'dd/MM/yyyy' }}</p>
 
+    <!-- Action bar -->
+    <div class="action-bar">
+      <button class="action-btn like-btn" [class.active]="liked" (click)="toggleLike()" title="לייק">
+        {{ liked ? '❤️' : '🤍' }} <span>{{ likeCount }}</span>
+      </button>
+      <button class="action-btn star-btn" [class.active]="starred" (click)="toggleStar()" title="{{ starred ? 'הסר מהשמורים' : 'שמור' }}">
+        {{ starred ? '★' : '☆' }} {{ starred ? 'שמור' : 'שמור' }}
+      </button>
+
+      @if (c.contentType === 'Article') {
+        <div class="speech-controls">
+          <button class="action-btn speech-btn" [class.active]="speaking()" (click)="toggleSpeech()" title="הקראה קולית">
+            {{ speaking() ? '⏹ עצור' : '🔊 הקראה' }}
+          </button>
+          <select class="lang-select" (change)="setSpeechLang($any($event.target).value)" [value]="speechLang()">
+            <option value="he-IL">🇮🇱 עברית</option>
+            <option value="en-US">🇺🇸 English</option>
+            <option value="fr-FR">🇫🇷 Français</option>
+          </select>
+        </div>
+      }
+    </div>
+
+    <!-- Video -->
     @if (c.contentType === 'Video' && c.videoUrl) {
-      <div class="video-wrap">
-        <iframe [src]="c.videoUrl" [title]="c.title" allowfullscreen></iframe>
-      </div>
-      @if (c.durationSeconds) {
-        <p class="meta">אורך: {{ c.durationSeconds }} שניות</p>
+      @if (blocked()) {
+        <div class="blocked-banner">
+          🔒 הגעת למגבלת הצפייה החינמית (30 שעות בחודש).
+          <br>שדרגי למנוי להמשך צפייה ללא הגבלה.
+        </div>
+      } @else {
+        <div class="video-wrap">
+          <iframe [src]="safeUrl(c.videoUrl)" [title]="c.title" allowfullscreen></iframe>
+        </div>
+        @if (c.durationSeconds) {
+          <p class="meta">אורך: {{ c.durationSeconds }} שניות</p>
+        }
       }
     }
 
+    <!-- Article -->
     @if (c.contentType === 'Article' && c.body) {
       <div class="article-body" [innerHTML]="c.body"></div>
     }
+
+    <!-- Comments -->
+    <section class="comments-section">
+      <h2 class="comments-title">💬 תגובות ({{ comments().length }})</h2>
+
+      <!-- New comment -->
+      <div class="comment-form">
+        <textarea [formControl]="commentText" placeholder="כתבי תגובה..." rows="2"></textarea>
+        <button class="btn btn-primary" (click)="submitComment()" [disabled]="!commentText.value.trim()">פרסם</button>
+      </div>
+
+      <!-- Comment list -->
+      @for (comment of rootComments(); track comment.id) {
+        <div class="comment">
+          <div class="comment-header">
+            <span class="comment-author">{{ comment.authorName }}</span>
+            <span class="comment-date">{{ comment.createdAt | date: 'dd/MM/yyyy HH:mm' }}</span>
+          </div>
+          <p class="comment-text">{{ comment.text }}</p>
+          <div class="comment-actions">
+            <button class="reply-toggle" (click)="startReply(comment.id)">
+              {{ replyingToId === comment.id ? '✕ ביטול' : '↩ הגב' }}
+            </button>
+            @if (auth.isAdmin()) {
+              <button class="del-comment" (click)="deleteComment(comment.id)">🗑</button>
+            }
+          </div>
+
+          <!-- Reply form -->
+          @if (replyingToId === comment.id) {
+            <div class="reply-form">
+              <textarea [formControl]="replyText" placeholder="כתבי תגובה..." rows="2"></textarea>
+              <button class="btn btn-primary btn-sm" (click)="submitReply(comment.id)" [disabled]="!replyText.value.trim()">פרסם</button>
+            </div>
+          }
+
+          <!-- Replies -->
+          @for (reply of repliesFor(comment.id); track reply.id) {
+            <div class="comment reply">
+              <div class="comment-header">
+                <span class="comment-author">{{ reply.authorName }}</span>
+                <span class="comment-date">{{ reply.createdAt | date: 'dd/MM/yyyy HH:mm' }}</span>
+              </div>
+              <p class="comment-text">{{ reply.text }}</p>
+              @if (auth.isAdmin()) {
+                <button class="del-comment" (click)="deleteComment(reply.id)">🗑</button>
+              }
+            </div>
+          }
+        </div>
+      }
+
+      @if (rootComments().length === 0) {
+        <p class="muted">אין תגובות עדיין. היי הראשונה!</p>
+      }
+    </section>
+
   </article>
   }
 }

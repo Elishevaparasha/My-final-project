@@ -29,6 +29,7 @@ export class ContentFormComponent implements OnInit {
     durationSeconds: [0],
     body: [''],
     thumbnailUrl: [''],
+    uploadDate: [new Date().toISOString().split('T')[0]],
   });
 
   ngOnInit(): void {
@@ -45,10 +46,16 @@ export class ContentFormComponent implements OnInit {
             durationSeconds: c.durationSeconds ?? 0,
             body: c.body ?? '',
             thumbnailUrl: c.thumbnailUrl ?? '',
+            uploadDate: c.uploadDate ? c.uploadDate.split('T')[0] : new Date().toISOString().split('T')[0],
           });
         },
       });
     }
+  }
+
+  toEmbedUrl(url: string): string {
+    const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/))([\w-]{11})/);
+    return match ? `https://www.youtube.com/embed/${match[1]}` : url;
   }
 
   submit(): void {
@@ -61,11 +68,12 @@ export class ContentFormComponent implements OnInit {
       title: raw.title,
       description: raw.description,
       contentType: raw.contentType,
-      videoUrl: raw.contentType === 'Video' ? raw.videoUrl || undefined : undefined,
+      videoUrl: raw.contentType === 'Video' ? this.toEmbedUrl(raw.videoUrl) || undefined : undefined,
       durationSeconds:
         raw.contentType === 'Video' ? Number(raw.durationSeconds) || undefined : undefined,
       body: raw.contentType === 'Article' ? raw.body || undefined : undefined,
       thumbnailUrl: raw.thumbnailUrl || undefined,
+      uploadDate: raw.uploadDate || undefined,
     };
 
     this.loading.set(true);

@@ -70,4 +70,5 @@ export interface ContentRequest {
   durationSeconds?: number;
   body?: string;
   thumbnailUrl?: string;
+  uploadDate?: string;
 }
