@@ -31,6 +31,12 @@ export class UserService {
     });
   }
 
+  cancelSubscription(id: string) {
+    return this.http.put(`${this.baseUrl}/cancel-subscription/${id}`, null, {
+      responseType: 'text',
+    });
+  }
+
   makeAdmin(id: string) {
     return this.http.put(`${this.baseUrl}/make-admin/${id}`, null, {
       responseType: 'text',

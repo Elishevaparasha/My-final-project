@@ -99,7 +99,7 @@ export class ProfileComponent implements OnInit {
     const user = this.auth.currentUser();
     if (!user || !confirm('לבטל את המנוי?')) return;
     this.subscribing.set(true);
-    this.userService.updateSubscription(user.id, false).subscribe({
+    this.userService.cancelSubscription(user.id).subscribe({
       next: () => {
         this.subscribing.set(false);
         this.userService.getById(user.id).subscribe((data) => {
