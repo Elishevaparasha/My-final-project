@@ -87,6 +87,13 @@ namespace Web_Application.Controllers
             return Ok("המנוי עודכן בהצלחה");
         }
         [Authorize]
+        [HttpPut("subscribe/{id}")]
+        public IActionResult Subscribe(Guid id)
+        {
+            _userService.Subscribe(id);
+            return Ok("המנוי הופעל בהצלחה");
+        }
+        [Authorize]
         [HttpPut("watch-time/{id}")]
         public IActionResult UpdateWatchTime(Guid id, [FromBody] int seconds)
         {

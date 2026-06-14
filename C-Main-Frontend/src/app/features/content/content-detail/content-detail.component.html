@@ -19,7 +19,6 @@
     </div>
 
     <!-- Header -->
-    <span class="badge">{{ c.contentType === 'Video' ? '🎬 וידאו' : '📄 מאמר' }}</span>
     <h1>{{ c.title }}</h1>
     <p class="desc">{{ c.description }}</p>
     <p class="meta">תאריך: {{ c.uploadDate | date: 'dd/MM/yyyy' }}</p>
@@ -35,13 +34,13 @@
 
       @if (c.contentType === 'Article') {
         <div class="speech-controls">
-          <button class="action-btn speech-btn" [class.active]="speaking()" (click)="toggleSpeech()" title="הקראה קולית">
-            {{ speaking() ? '⏹ עצור' : '🔊 הקראה' }}
+          <button class="action-btn speech-btn" [class.active]="speaking()" (click)="toggleSpeech()" [disabled]="translating()" title="הקראה קולית">
+            {{ translating() ? 'מתרגם...' : speaking() ? 'עצור' : 'הקראה' }}
           </button>
           <select class="lang-select" (change)="setSpeechLang($any($event.target).value)" [value]="speechLang()">
-            <option value="he-IL">🇮🇱 עברית</option>
-            <option value="en-US">🇺🇸 English</option>
-            <option value="fr-FR">🇫🇷 Français</option>
+            <option value="he-IL">עברית</option>
+            <option value="en-US">English</option>
+            <option value="fr-FR">Français</option>
           </select>
         </div>
       }
@@ -52,7 +51,7 @@
       @if (blocked()) {
         <div class="blocked-banner">
           🔒 הגעת למגבלת הצפייה החינמית (30 שעות בחודש).
-          <br>שדרגי למנוי להמשך צפייה ללא הגבלה.
+          <br>שדרג למנוי להמשך צפייה ללא הגבלה.
         </div>
       } @else {
         <div class="video-wrap">
@@ -65,8 +64,13 @@
     }
 
     <!-- Article -->
-    @if (c.contentType === 'Article' && c.body) {
-      <div class="article-body" [innerHTML]="c.body"></div>
+    @if (c.contentType === 'Article') {
+      @if (c.thumbnailUrl) {
+        <img [src]="c.thumbnailUrl" [alt]="c.title" class="article-thumb" />
+      }
+      @if (c.body) {
+        <div class="article-body" [innerHTML]="c.body"></div>
+      }
     }
 
     <!-- Comments -->
@@ -75,7 +79,7 @@
 
       <!-- New comment -->
       <div class="comment-form">
-        <textarea [formControl]="commentText" placeholder="כתבי תגובה..." rows="2"></textarea>
+        <textarea [formControl]="commentText" placeholder="כתוב תגובה..." rows="2"></textarea>
         <button class="btn btn-primary" (click)="submitComment()" [disabled]="!commentText.value.trim()">פרסם</button>
       </div>
 
@@ -99,7 +103,7 @@
           <!-- Reply form -->
           @if (replyingToId === comment.id) {
             <div class="reply-form">
-              <textarea [formControl]="replyText" placeholder="כתבי תגובה..." rows="2"></textarea>
+              <textarea [formControl]="replyText" placeholder="כתוב תגובה..." rows="2"></textarea>
               <button class="btn btn-primary btn-sm" (click)="submitReply(comment.id)" [disabled]="!replyText.value.trim()">פרסם</button>
             </div>
           }
@@ -121,7 +125,7 @@
       }
 
       @if (rootComments().length === 0) {
-        <p class="muted">אין תגובות עדיין. היי הראשונה!</p>
+        <p class="muted" style="color:#ffffff">אין תגובות עדיין. היה הראשון!</p>
       }
     </section>
 

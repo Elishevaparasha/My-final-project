@@ -196,5 +196,14 @@ namespace Bl_layer.Services
             _repository.Update(user);
         }
 
+        public void Subscribe(Guid id)
+        {
+            Dal_layer.Models.User user = _repository.GetById(id);
+            if (user == null) return;
+            user.IsSubscriber = true;
+            user.SubscriptionExpiryDate = DateTime.UtcNow.AddMonths(1);
+            _repository.Update(user);
+        }
+
     }
 }

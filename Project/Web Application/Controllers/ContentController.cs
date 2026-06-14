@@ -55,5 +55,32 @@ namespace Web_Application.Controllers
             _contentService.Delete(id);
             return NoContent();
         }
+
+        [HttpPost("translate")]
+        public IActionResult Translate([FromBody] TranslateRequest request)
+        {
+            var result = _contentService.Translate(request.Text, request.TargetLang);
+            return Ok(new { translatedText = result });
+        }
+
+        [HttpGet("{id}/comments")]
+        public IActionResult GetComments(Guid id)
+        {
+            return Ok(_contentService.GetComments(id));
+        }
+
+        [HttpPost("{id}/comments")]
+        public IActionResult AddComment(Guid id, [FromBody] AddCommentRequest request)
+        {
+            var comment = _contentService.AddComment(id, request);
+            return Ok(comment);
+        }
+
+        [HttpDelete("{id}/comments/{commentId}")]
+        public IActionResult DeleteComment(Guid id, Guid commentId)
+        {
+            _contentService.DeleteComment(id, commentId);
+            return NoContent();
+        }
     }
 }

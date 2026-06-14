@@ -13,5 +13,9 @@ namespace Web_Application.Api
         void Add(ContentRequest request);
         void Update(Guid id, ContentRequest request);
         void Delete(Guid id);
+        string Translate(string text, string targetLang);
+        IEnumerable<Models.CommentResponse> GetComments(Guid contentId);
+        Models.CommentResponse AddComment(Guid contentId, Models.AddCommentRequest request);
+        void DeleteComment(Guid contentId, Guid commentId);
     }
 }

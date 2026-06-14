@@ -5,7 +5,10 @@
     <p><strong>שם:</strong> {{ p.firstName }} {{ p.lastName }}</p>
     <p><strong>אימייל:</strong> {{ p.email }}</p>
     <p><strong>מייל מאומת:</strong> {{ p.isEmailVerified ? 'כן' : 'לא' }}</p>
-    <p><strong>מנוי:</strong> {{ p.isSubscriber ? 'כן' : 'לא' }}</p>
+    <p><strong>מנוי:</strong> {{ p.isSubscriber ? 'פרימיום ✓' : 'חינם' }}</p>
+    @if (!p.isSubscriber) {
+      <a routerLink="/subscribe" class="btn btn-primary">שדרג לפרימיום</a>
+    }
     <p><strong>צפייה החודש:</strong> {{ p.monthlyWatchedSeconds | watchTime }}</p>
     @if (canWatch() !== null) {
       <p>

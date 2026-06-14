@@ -5,9 +5,9 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { ContentService } from '../../../core/services/content.service';
 import { UserService } from '../../../core/services/user.service';
-import { ContentResponse } from '../../../core/models/api.models';
+import { ContentResponse, Comment } from '../../../core/models/api.models';
 import { AuthService } from '../../../core/services/auth.service';
-import { LocalDataService, Comment } from '../../../core/services/local-data.service';
+import { LocalDataService } from '../../../core/services/local-data.service';
 
 @Component({
   selector: 'app-content-detail',
@@ -33,6 +33,8 @@ export class ContentDetailComponent implements OnInit, OnDestroy {
   // ── Speech ────────────────────────────────────────────
   readonly speaking = signal(false);
   readonly speechLang = signal<'he-IL' | 'en-US' | 'fr-FR'>('he-IL');
+  private currentText = '';
+  readonly translating = signal(false);
 
   // ── Comments ──────────────────────────────────────────
   comments = signal<Comment[]>([]);
@@ -61,7 +63,7 @@ export class ContentDetailComponent implements OnInit, OnDestroy {
         this.liked = this.localData.hasLiked(id);
         this.likeCount = this.localData.getLikes(id);
         this.starred = this.localData.isStarred(id);
-        this.comments.set(this.localData.getComments(id));
+        this.loadComments(id);
 
         if (data.contentType === 'Video') {
           this.checkWatchLimit();
@@ -120,6 +122,14 @@ export class ContentDetailComponent implements OnInit, OnDestroy {
     this.starred = this.localData.toggleStar(id);
   }
 
+  // ── Comments ──────────────────────────────────────────
+  private loadComments(id: string): void {
+    this.contentService.getComments(id).subscribe({
+      next: (comments) => this.comments.set(comments),
+      error: () => this.comments.set([]),
+    });
+  }
+
   // ── Speech ────────────────────────────────────────────
   toggleSpeech(): void {
     if (this.speaking()) {
@@ -129,6 +139,33 @@ export class ContentDetailComponent implements OnInit, OnDestroy {
     }
     const text = this.item()?.body ?? this.item()?.description ?? '';
     if (!text) return;
+    
+    const lang = this.speechLang();
+    
+    // If Hebrew, just speak. If English or French, translate first
+    if (lang === 'he-IL') {
+      this.currentText = text;
+      this.speakText(text);
+    } else {
+      this.translating.set(true);
+      const targetLang = lang === 'en-US' ? 'en' : 'fr';
+      this.contentService.translate(text, targetLang).subscribe({
+        next: (translated) => {
+          this.translating.set(false);
+          this.currentText = translated;
+          this.speakText(translated);
+        },
+        error: () => {
+          this.translating.set(false);
+          // Fallback to original Hebrew
+          this.currentText = text;
+          this.speakText(text);
+        },
+      });
+    }
+  }
+
+  private speakText(text: string): void {
     const utter = new SpeechSynthesisUtterance(text);
     utter.lang = this.speechLang();
     utter.onend = () => this.speaking.set(false);
@@ -154,28 +191,33 @@ export class ContentDetailComponent implements OnInit, OnDestroy {
     const text = this.commentText.value.trim();
     const id = this.item()?.id;
     if (!text || !id) return;
-    const authorName = this.auth.currentUser()?.firstName ?? 'אורח';
-    this.localData.addComment(id, text, authorName, null);
-    this.comments.set(this.localData.getComments(id));
-    this.commentText.setValue('');
+    this.contentService.addComment(id, text).subscribe({
+      next: () => {
+        this.loadComments(id);
+        this.commentText.setValue('');
+      },
+    });
   }
 
   submitReply(parentId: string): void {
     const text = this.replyText.value.trim();
     const id = this.item()?.id;
     if (!text || !id) return;
-    const authorName = this.auth.currentUser()?.firstName ?? 'אורח';
-    this.localData.addComment(id, text, authorName, parentId);
-    this.comments.set(this.localData.getComments(id));
-    this.replyText.setValue('');
-    this.replyingToId = null;
+    this.contentService.addComment(id, text, parentId).subscribe({
+      next: () => {
+        this.loadComments(id);
+        this.replyText.setValue('');
+        this.replyingToId = null;
+      },
+    });
   }
 
   deleteComment(commentId: string): void {
     const id = this.item()?.id;
     if (!id) return;
-    this.localData.deleteComment(id, commentId);
-    this.comments.set(this.localData.getComments(id));
+    this.contentService.deleteComment(id, commentId).subscribe({
+      next: () => this.loadComments(id),
+    });
   }
 
   startReply(id: string): void {

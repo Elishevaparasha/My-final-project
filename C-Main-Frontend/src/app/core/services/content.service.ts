@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
+import { Observable, map } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { ContentRequest, ContentResponse } from '../models/api.models';
+import { ContentRequest, ContentResponse, Comment } from '../models/api.models';
 
 @Injectable({ providedIn: 'root' })
 export class ContentService {
@@ -32,5 +33,26 @@ export class ContentService {
 
   delete(id: string) {
     return this.http.delete(`${this.baseUrl}/${id}`);
+  }
+
+  // ── Translation for TTS ─────────────────────────────────
+  translate(text: string, targetLang: string): Observable<string> {
+    return this.http.post<{ translatedText: string }>(
+      `${this.baseUrl}/translate`,
+      { text, targetLang }
+    ).pipe(map(res => res.translatedText));
+  }
+
+  // ── Comments (backend) ──────────────────────────────────
+  getComments(contentId: string): Observable<Comment[]> {
+    return this.http.get<Comment[]>(`${this.baseUrl}/${contentId}/comments`);
+  }
+
+  addComment(contentId: string, text: string, parentId?: string): Observable<Comment> {
+    return this.http.post<Comment>(`${this.baseUrl}/${contentId}/comments`, { text, parentId });
+  }
+
+  deleteComment(contentId: string, commentId: string): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/${contentId}/comments/${commentId}`);
   }
 }

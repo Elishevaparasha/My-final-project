@@ -1,9 +1,11 @@
 .detail {
-  background: var(--surface-card);
-  padding: 2rem;
-  border-radius: 12px;
-  border: 1px solid var(--border);
-  color: var(--text-primary);
+  background: #0f0f0f;
+  padding: 1.5rem 3rem;
+  margin: 0;
+  color: #fff;
+  text-align: right;
+  direction: rtl;
+  min-height: 100vh;
 }
 
 .actions-top {
@@ -14,11 +16,11 @@
 
 .admin-actions { display: flex; gap: 0.5rem; }
 
-.back { color: var(--accent-light); text-decoration: none; }
+.back { color: #93c5fd; text-decoration: none; }
 
-.desc { color: var(--text-muted); line-height: 1.6; }
+.desc { color: #d1d5db; line-height: 1.6; }
 
-.meta { color: var(--text-muted); font-size: 0.9rem; }
+.meta { color: #9ca3af; font-size: 0.9rem; }
 
 // ── Action bar ────────────────────────────────────────
 .action-bar {
@@ -35,14 +37,14 @@
   gap: 0.35rem;
   padding: 0.45rem 1rem;
   border-radius: 999px;
-  border: 1px solid var(--border);
-  background: rgba(255,255,255,0.07);
-  color: var(--text-muted);
+  border: 1px solid #4f4f4f;
+  background: #212121;
+  color: #ffffff;
   font: inherit;
   font-size: 0.95rem;
   cursor: pointer;
   transition: all 0.15s;
-  &:hover { background: rgba(255,255,255,0.15); color: var(--text-primary); }
+  &:hover { background: #3f3f3f; color: #ffffff; }
 }
 
 .like-btn.active { background: rgba(239,68,68,0.2); border-color: #ef4444; color: #fca5a5; }
@@ -54,9 +56,9 @@
 .lang-select {
   padding: 0.4rem 0.6rem;
   border-radius: 8px;
-  border: 1px solid var(--border);
-  background: rgba(23,37,84,0.6);
-  color: var(--text-primary);
+  border: 1px solid #4f4f4f;
+  background: #212121;
+  color: #ffffff;
   font: inherit;
   font-size: 0.9rem;
   cursor: pointer;
@@ -90,11 +92,20 @@
   margin: 1rem 0;
 }
 
-// ── Article ───────────────────────────────────────────
 .article-body {
   margin-top: 1.5rem;
   line-height: 1.8;
-  color: var(--text-primary);
+  color: #ffffff;
+  white-space: pre-line;
+}
+
+.article-thumb {
+  width: 60%;
+  height: auto;
+  object-fit: contain;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  display: block;
 }
 
 // ── Badge ─────────────────────────────────────────────
@@ -107,7 +118,7 @@
   border-radius: 4px;
 }
 
-h1 { color: var(--text-primary); margin: 0.5rem 0; }
+h1 { color: #ffffff; margin: 0.5rem 0; }
 
 // ── Comments ──────────────────────────────────────────
 .comments-section {
@@ -119,7 +130,7 @@ h1 { color: var(--text-primary); margin: 0.5rem 0; }
 .comments-title {
   margin: 0 0 1rem;
   font-size: 1.1rem;
-  color: var(--text-primary);
+  color: #ffffff;
 }
 
 .comment-form, .reply-form {
@@ -130,14 +141,14 @@ h1 { color: var(--text-primary); margin: 0.5rem 0; }
   textarea {
     padding: 0.65rem 0.85rem;
     border-radius: 8px;
-    border: 1px solid var(--border);
-    background: rgba(23,37,84,0.5);
-    color: var(--text-primary);
+    border: 1px solid #3f3f3f;
+    background: #212121;
+    color: #ffffff;
     font: inherit;
     font-size: 0.95rem;
     resize: vertical;
-    &::placeholder { color: var(--text-muted); }
-    &:focus { outline: 2px solid var(--accent-light); }
+    &::placeholder { color: #9ca3af; }
+    &:focus { outline: 2px solid #93c5fd; }
   }
   button { align-self: flex-end; }
 }
@@ -150,8 +161,8 @@ h1 { color: var(--text-primary); margin: 0.5rem 0; }
 .btn-sm { padding: 0.35rem 0.75rem; font-size: 0.85rem; }
 
 .comment {
-  background: rgba(23,37,84,0.4);
-  border: 1px solid var(--border);
+  background: #212121;
+  border: 1px solid #3f3f3f;
   border-radius: 10px;
   padding: 0.85rem 1rem;
   margin-bottom: 0.75rem;
@@ -159,8 +170,8 @@ h1 { color: var(--text-primary); margin: 0.5rem 0; }
   &.reply {
     margin-right: 1.5rem;
     margin-top: 0.5rem;
-    background: rgba(30,64,175,0.3);
-    border-color: rgba(147,197,253,0.2);
+    background: #2a2a2a;
+    border-color: #4f4f4f;
   }
 }
 
@@ -173,15 +184,15 @@ h1 { color: var(--text-primary); margin: 0.5rem 0; }
 
 .comment-author {
   font-weight: 700;
-  color: var(--accent-light);
+  color: #93c5fd;
   font-size: 0.9rem;
 }
 
-.comment-date { font-size: 0.78rem; color: var(--text-muted); }
+.comment-date { font-size: 0.78rem; color: #9ca3af; }
 
 .comment-text {
   margin: 0 0 0.5rem;
-  color: var(--text-primary);
+  color: #ffffff;
   line-height: 1.5;
   font-size: 0.95rem;
 }
@@ -191,7 +202,7 @@ h1 { color: var(--text-primary); margin: 0.5rem 0; }
 .reply-toggle {
   background: none;
   border: none;
-  color: var(--accent-light);
+  color: #93c5fd;
   font: inherit;
   font-size: 0.85rem;
   cursor: pointer;

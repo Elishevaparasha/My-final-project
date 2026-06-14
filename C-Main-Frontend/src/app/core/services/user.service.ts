@@ -45,6 +45,12 @@ export class UserService {
     return this.http.put(`${this.baseUrl}/watch-time/${id}`, seconds);
   }
 
+  subscribe(id: string) {
+    return this.http.put(`${this.baseUrl}/subscribe/${id}`, null, {
+      responseType: 'text',
+    });
+  }
+
   changePassword(request: ChangePasswordRequest) {
     return this.http.post(`${this.baseUrl}/change-password`, request, {
       responseType: 'text',

@@ -49,6 +49,15 @@ export interface ForgotPasswordRequest {
   resetToken: string;
 }
 
+export interface Comment {
+  id: string;
+  contentId: string;
+  parentId: string | null;
+  authorName: string;
+  text: string;
+  createdAt: string;
+}
+
 export interface ContentResponse {
   id: string;
   title: string;

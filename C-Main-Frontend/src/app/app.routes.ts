@@ -75,6 +75,14 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'subscribe',
+        canActivate: [authGuard],
+        loadComponent: () =>
+          import('./features/auth/subscribe/subscribe.component').then(
+            (m) => m.SubscribeComponent,
+          ),
+      },
+      {
         path: 'admin/users',
         canActivate: [adminGuard],
         loadComponent: () =>
