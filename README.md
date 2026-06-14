@@ -63,7 +63,7 @@ Project/Web Application/appsettings.example.json → appsettings.json
 הרץ את השרת:
 ```bash
 cd "Project/Web Application"
-dotnet run
+dotnet run --no-restore??
 ```
 
 השרת יעלה על `https://localhost:7245`
@@ -74,6 +74,7 @@ dotnet run
 cd C-Main-Frontend
 npm install
 npm start
+ng serve --port 4200 --configuration development --disable-host-check
 ```
 
 האתר יעלה על `http://localhost:4200`
