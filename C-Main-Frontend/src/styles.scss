@@ -4,12 +4,12 @@
   --nav-blue-light: #3b82f6;
   --nav-blue-dark: #2563eb;
   --nav-blue-deep: #1d4ed8;
-  --text-primary: #1e293b;
-  --text-muted: #475569;
-  --accent-light: #2563eb;
-  --surface: rgba(219, 234, 254, 0.7);
-  --surface-card: #ffffff;
-  --border: rgba(59, 130, 246, 0.3);
+  --text-primary: #f8fafc;
+  --text-muted: #bfdbfe;
+  --accent-light: #93c5fd;
+  --surface: rgba(30, 58, 138, 0.5);
+  --surface-card: rgba(30, 58, 138, 0.7);
+  --border: rgba(147, 197, 253, 0.25);
 }
 
 *,
@@ -19,7 +19,7 @@
 }
 
 html {
-  zoom: 0.75;
+  font-size: clamp(14px, 1.2vw, 16px);
 }
 
 html,
@@ -28,7 +28,7 @@ body {
   min-height: 100%;
   font-size: 16px;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: #0f0f0f;
+  background: #1a1f3a;
   background-attachment: fixed;
   color: var(--text-primary);
 }

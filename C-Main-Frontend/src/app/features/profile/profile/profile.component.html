@@ -1,41 +1,83 @@
-<h1>פרופיל</h1>
+<div class="profile-wrap">
 
-@if (profile(); as p) {
+  @if (profile(); as p) {
+    <section class="card">
+      <h2>פרטים אישיים</h2>
+      <p><strong>שם:</strong> {{ p.firstName }} {{ p.lastName }}</p>
+      <p><strong>אימייל:</strong> {{ p.email }}</p>
+      <p><strong>מייל מאומת:</strong> {{ p.isEmailVerified ? 'כן' : 'לא' }}</p>
+    </section>
+
+    <section class="card" [class.premium]="p.isSubscriber">
+      <h2>סטטוס מנוי</h2>
+
+      @if (p.isSubscriber) {
+        <p class="premium-msg">מנוי פרימיום פעיל - גישה מלאה לכל התכנים</p>
+        <div class="action-row">
+          <button class="btn-cancel" (click)="cancelSubscription()" [disabled]="subscribing()">
+            {{ subscribing() ? 'מעבד...' : 'ביטול מנוי' }}
+          </button>
+        </div>
+      } @else {
+        <p><strong>זמן צפייה החודש:</strong> {{ p.monthlyWatchedSeconds | watchTime }}</p>
+        <div class="watch-bar">
+          <div class="watch-fill" [style.width.%]="watchPercent()"></div>
+        </div>
+        @if (canWatch() === false) {
+          <p class="blocked-msg">הגעת למגבלת 30 השעות החודשיות. תאופס בתחילת החודש הבא.</p>
+        }
+        @if (!showCreditForm()) {
+          <button class="btn btn-upgrade" (click)="showCreditForm.set(true)">
+            שדרגי למנוי פרימיום - 10 ₪ לחודש
+          </button>
+        } @else {
+          <form class="credit-form" [formGroup]="creditForm" (ngSubmit)="subscribe()">
+            <label>
+              שם בעל הכרטיס
+              <input type="text" formControlName="name" placeholder="ישראל ישראלי" />
+            </label>
+            <label>
+              מספר כרטיס אשראי
+              <input type="text" formControlName="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19" />
+            </label>
+            <div class="credit-row">
+              <label>
+                תוקף (MM/YY)
+                <input type="text" formControlName="expiry" placeholder="12/27" maxlength="5" />
+              </label>
+              <label>
+                CVV
+                <input type="text" formControlName="cvv" placeholder="123" maxlength="3" />
+              </label>
+            </div>
+            @if (subError()) { <p class="error">{{ subError() }}</p> }
+            <div class="action-row">
+              <button type="submit" class="btn btn-upgrade" [disabled]="subscribing()">
+                {{ subscribing() ? 'מעבד...' : 'אשר תשלום - 10 ₪' }}
+              </button>
+              <button type="button" class="btn-cancel" (click)="showCreditForm.set(false)">ביטול</button>
+            </div>
+          </form>
+        }
+        @if (subMessage()) { <p class="success">{{ subMessage() }}</p> }
+      }
+    </section>
+  }
+
   <section class="card">
-    <p><strong>שם:</strong> {{ p.firstName }} {{ p.lastName }}</p>
-    <p><strong>אימייל:</strong> {{ p.email }}</p>
-    <p><strong>מייל מאומת:</strong> {{ p.isEmailVerified ? 'כן' : 'לא' }}</p>
-    <p><strong>מנוי:</strong> {{ p.isSubscriber ? 'פרימיום ✓' : 'חינם' }}</p>
-    @if (!p.isSubscriber) {
-      <a routerLink="/subscribe" class="btn btn-primary">שדרג לפרימיום</a>
-    }
-    <p><strong>צפייה החודש:</strong> {{ p.monthlyWatchedSeconds | watchTime }}</p>
-    @if (canWatch() !== null) {
-      <p>
-        <strong>מגבלת צפייה חינמית:</strong>
-        {{ canWatch() ? '✅ עדיין זמינה' : '🔒 הגעת ל-30 שעות החודש' }}
-      </p>
-    }
+    <h2>שינוי סיסמה</h2>
+    <form [formGroup]="passwordForm" (ngSubmit)="changePassword()">
+      <label>
+        סיסמה נוכחית
+        <input type="password" formControlName="oldPassword" />
+      </label>
+      <label>
+        סיסמה חדשה
+        <input type="password" formControlName="newPassword" />
+      </label>
+      @if (pwdError()) { <p class="error">{{ pwdError() }}</p> }
+      @if (pwdMessage()) { <p class="success">{{ pwdMessage() }}</p> }
+      <button type="submit" class="btn btn-primary">עדכון סיסמה</button>
+    </form>
   </section>
-}
-
-<section class="card">
-  <h2>שינוי סיסמה</h2>
-  <form [formGroup]="passwordForm" (ngSubmit)="changePassword()">
-    <label>
-      סיסמה נוכחית
-      <input type="password" formControlName="oldPassword" />
-    </label>
-    <label>
-      סיסמה חדשה
-      <input type="password" formControlName="newPassword" />
-    </label>
-    @if (pwdError()) {
-      <p class="error">{{ pwdError() }}</p>
-    }
-    @if (pwdMessage()) {
-      <p class="success">{{ pwdMessage() }}</p>
-    }
-    <button type="submit" class="btn btn-primary">עדכון סיסמה</button>
-  </form>
-</section>
+</div>

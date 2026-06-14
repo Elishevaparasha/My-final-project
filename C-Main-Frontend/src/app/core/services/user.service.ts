@@ -42,7 +42,7 @@ export class UserService {
   }
 
   updateWatchTime(id: string, seconds: number) {
-    return this.http.put(`${this.baseUrl}/watch-time/${id}`, seconds);
+    return this.http.put(`${this.baseUrl}/watch-time/${id}`, seconds, { responseType: 'text' });
   }
 
   subscribe(id: string) {

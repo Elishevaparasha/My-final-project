@@ -5,7 +5,7 @@ export class WatchTimePipe implements PipeTransform {
   transform(seconds: number): string {
     const h = Math.floor(seconds / 3600);
     const m = Math.floor((seconds % 3600) / 60);
-    const limit = 30;
-    return `${h}:${String(m).padStart(2, '0')} שעות מתוך ${limit}`;
+    if (h === 0) return `${m} דקות מתוך 30 שעות בחודש`;
+    return `${h} שעות ו-${m} דקות מתוך 30 שעות בחודש`;
   }
 }

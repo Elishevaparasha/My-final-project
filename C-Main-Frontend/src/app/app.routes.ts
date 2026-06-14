@@ -15,6 +15,14 @@ export const routes: Routes = [
           import('./features/home/home.component').then((m) => m.HomeComponent),
       },
       {
+        path: 'search',
+        loadComponent: () =>
+          import('./features/content/content-list/content-list.component').then(
+            (m) => m.ContentListComponent,
+          ),
+        data: { pageTitle: 'תוצאות חיפוש' },
+      },
+      {
         path: 'videos',
         loadComponent: () =>
           import('./features/content/content-list/content-list.component').then(
@@ -57,6 +65,11 @@ export const routes: Routes = [
           import('./features/content/content-detail/content-detail.component').then(
             (m) => m.ContentDetailComponent,
           ),
+      },
+      {
+        path: 'books',
+        loadComponent: () =>
+          import('./features/books/books.component').then((m) => m.BooksComponent),
       },
       {
         path: 'saved',

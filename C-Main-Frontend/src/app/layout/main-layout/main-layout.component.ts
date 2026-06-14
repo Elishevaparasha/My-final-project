@@ -45,7 +45,7 @@ export class MainLayoutComponent implements OnInit {
 
   onSearch(): void {
     const q = this.searchControl.value.trim();
-    this.router.navigate(['/videos'], { queryParams: q ? { q } : {} });
+    this.router.navigate(['/search'], { queryParams: q ? { q } : {} });
   }
 
   logout(): void {

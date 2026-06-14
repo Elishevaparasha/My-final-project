@@ -3,8 +3,9 @@
     <a routerLink="/home" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">דף הבית</a>
     <a routerLink="/videos" routerLinkActive="active">סרטונים</a>
     <a routerLink="/articles" routerLinkActive="active">כתבות</a>
+    <a routerLink="/books" routerLinkActive="active">ספרים</a>
     @if (auth.isLoggedIn()) {
-      <a routerLink="/saved" routerLinkActive="active">★ שמורים</a>
+      <a routerLink="/saved" routerLinkActive="active">שמורים</a>
       <a routerLink="/profile" routerLinkActive="active">פרופיל</a>
     }
     @if (auth.isAdmin()) {
@@ -33,17 +34,6 @@
     </div>
   </div>
 </header>
-
-@if (isHome()) {
-  <img src="/images/10.png" alt="" class="side-image" />
-  <div class="home-info">
-    <h2>הרב אייל אונגר שליט"א</h2>
-    <p>רב חרדי, פסיכותרפיסט ויועץ נישואין ומשפחה.</p>
-    <p>מעביר שיעורי תורה והרצאות בנושאי זוגיות והתפתחות אישית.</p>
-    <p style="margin-top: 1rem; opacity: 0.9;">באתר זה תוכלו לצפות בסרטונים ולקרוא מאמרים בנושאים:</p>
-    <p>זוגיות&nbsp;ונישואין • חינוך&nbsp;הילדים • תיקון&nbsp;המידות • התמודדות&nbsp;עם&nbsp;חרדות</p>
-  </div>
-}
 
 <main class="main">
   <router-outlet />

@@ -33,16 +33,9 @@
       </button>
 
       @if (c.contentType === 'Article') {
-        <div class="speech-controls">
-          <button class="action-btn speech-btn" [class.active]="speaking()" (click)="toggleSpeech()" [disabled]="translating()" title="הקראה קולית">
-            {{ translating() ? 'מתרגם...' : speaking() ? 'עצור' : 'הקראה' }}
-          </button>
-          <select class="lang-select" (change)="setSpeechLang($any($event.target).value)" [value]="speechLang()">
-            <option value="he-IL">עברית</option>
-            <option value="en-US">English</option>
-            <option value="fr-FR">Français</option>
-          </select>
-        </div>
+        <button class="action-btn speech-btn" [class.active]="speaking()" (click)="toggleSpeech()" title="הקראה קולית">
+          {{ speaking() ? '⏹ עצור' : '🔊 הקראה בעברית' }}
+        </button>
       }
     </div>
 

@@ -1,8 +1,9 @@
-import { Component, OnInit, signal, computed } from '@angular/core';
+import { Component, OnInit, OnDestroy, signal, computed } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, switchMap, takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 import { ContentService } from '../../../core/services/content.service';
 import { ContentResponse } from '../../../core/models/api.models';
 import { AuthService } from '../../../core/services/auth.service';
@@ -17,7 +18,7 @@ type SortKey = 'date-desc' | 'date-asc' | 'title-asc' | 'title-desc';
   templateUrl: './content-list.component.html',
   styleUrl: './content-list.component.scss',
 })
-export class ContentListComponent implements OnInit {
+export class ContentListComponent implements OnInit, OnDestroy {
   private readonly allItems = signal<ContentResponse[]>([]);
   readonly error = signal<string | null>(null);
   readonly loading = signal(true);
@@ -25,7 +26,7 @@ export class ContentListComponent implements OnInit {
   readonly searchControl = new FormControl('', { nonNullable: true });
   readonly sortKey = signal<SortKey>('date-desc');
   readonly showStarredOnly = signal(false);
-
+  private readonly destroy$ = new Subject<void>();
   private contentTypeFilter: string | null = null;
 
   readonly items = computed(() => {
@@ -53,25 +54,36 @@ export class ContentListComponent implements OnInit {
       (this.route.snapshot.data['pageTitle'] as string | undefined) ?? 'תוכן',
     );
 
-    const q = this.route.snapshot.queryParamMap.get('q');
-    if (q) this.searchControl.setValue(q, { emitEvent: false });
+    // האזנה ל-queryParams - עובד גם כשרק ה-params משתנים באותו עמוד
+    this.route.queryParamMap
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((params) => {
+        const q = params.get('q') ?? '';
+        this.searchControl.setValue(q, { emitEvent: false });
+        this.loading.set(true);
+        this.fetchContent(q).subscribe({
+          next: (data) => { this.allItems.set(this.applyTypeFilter(data)); this.loading.set(false); },
+          error: () => { this.error.set('שגיאה בטעינת התוכן. ודאי שהשרת רץ.'); this.loading.set(false); },
+        });
+      });
 
+    // האזנה לשינויים בשדה החיפוש המקומי
     this.searchControl.valueChanges
-      .pipe(debounceTime(300), distinctUntilChanged(), switchMap((kw) => this.fetchContent(kw)))
+      .pipe(
+        debounceTime(300),
+        distinctUntilChanged(),
+        takeUntil(this.destroy$),
+        switchMap((kw) => { this.loading.set(true); return this.fetchContent(kw); }),
+      )
       .subscribe({
         next: (data) => { this.allItems.set(this.applyTypeFilter(data)); this.loading.set(false); },
         error: () => { this.error.set('שגיאה בטעינת התוכן'); this.loading.set(false); },
       });
-
-    this.loadInitial();
   }
 
-  private loadInitial(): void {
-    this.loading.set(true);
-    this.fetchContent(this.searchControl.value.trim()).subscribe({
-      next: (data) => { this.allItems.set(this.applyTypeFilter(data)); this.loading.set(false); },
-      error: () => { this.error.set('שגיאה בטעינת התוכן. ודאי שהשרת רץ.'); this.loading.set(false); },
-    });
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   private fetchContent(keyword: string) {

@@ -31,6 +31,14 @@ namespace Dal_layer.Services
 
         public void Update(User u)
         {
+            u.CreatedAt = DateTime.SpecifyKind(u.CreatedAt, DateTimeKind.Utc);
+            u.WatchResetDate = DateTime.SpecifyKind(u.WatchResetDate, DateTimeKind.Utc);
+            if (u.LastLoginDate.HasValue)
+                u.LastLoginDate = DateTime.SpecifyKind(u.LastLoginDate.Value, DateTimeKind.Utc);
+            if (u.SubscriptionExpiryDate.HasValue)
+                u.SubscriptionExpiryDate = DateTime.SpecifyKind(u.SubscriptionExpiryDate.Value, DateTimeKind.Utc);
+            if (u.RefreshTokenExpiry.HasValue)
+                u.RefreshTokenExpiry = DateTime.SpecifyKind(u.RefreshTokenExpiry.Value, DateTimeKind.Utc);
             _context.Entry(u).State = EntityState.Modified;
             _context.SaveChanges();
         }
