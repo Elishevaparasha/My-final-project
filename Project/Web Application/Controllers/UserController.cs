@@ -87,6 +87,13 @@ namespace Web_Application.Controllers
             return Ok("המנוי עודכן בהצלחה");
         }
         [Authorize]
+        [HttpPut("cancel-subscription/{id}")]
+        public IActionResult CancelSubscription(Guid id)
+        {
+            _userService.UpdateSubscription(id, false);
+            return Ok("המנוי בוטל בהצלחה");
+        }
+        [Authorize]
         [HttpPut("subscribe/{id}")]
         public IActionResult Subscribe(Guid id)
         {
