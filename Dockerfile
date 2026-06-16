@@ -1,12 +1,15 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-WORKDIR /app
+WORKDIR /src
 
-# העתקת כל הקבצים שנמצאים בתוך C-Main-Project
-COPY . ./
+# העתקת כל הקבצים של השרת
+COPY . .
+
+# מעבר לתיקייה הפנימית שבה נמצא קוד השרת באמת
+WORKDIR "/src/project/Web Application"
+
+# ביצוע הבנייה מתוך התיקייה הנכונה
 RUN dotnet restore
-
-# בניית הפרויקט
-RUN dotnet publish -c Release -o out
+RUN dotnet publish -c Release -o /app/out
 
 # שלב ההרצה
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
