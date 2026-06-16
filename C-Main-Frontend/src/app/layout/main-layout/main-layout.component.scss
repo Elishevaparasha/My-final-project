@@ -16,6 +16,9 @@
   top: 0;
   z-index: 100;
   box-sizing: border-box;
+
+  @media (max-width: 900px) { height: 70px; }
+  @media (max-width: 600px) { height: auto; flex-wrap: wrap; }
 }
 
 .nav {
@@ -26,6 +29,9 @@
   padding: 0;
   height: 95px;
   overflow: hidden;
+
+  @media (max-width: 900px) { height: 70px; }
+  @media (max-width: 600px) { height: auto; width: 100%; overflow-x: auto; }
 
   a {
     display: flex;
@@ -40,15 +46,12 @@
     white-space: nowrap;
     transition: background 0.15s, color 0.15s;
 
-    &:hover {
-      background: #172d7a;
-      color: #fff;
-    }
+    @media (max-width: 1100px) { font-size: 1.1rem; }
+    @media (max-width: 900px)  { font-size: 0.95rem; padding: 0 0.4rem; }
+    @media (max-width: 600px)  { font-size: 0.85rem; padding: 0.5rem 0.6rem; }
 
-    &.active {
-      color: #ffffff;
-      background: #172d7a;
-    }
+    &:hover  { background: #172d7a; color: #fff; }
+    &.active { background: #172d7a; color: #fff; }
   }
 }
 
@@ -115,15 +118,11 @@
   color: #fff;
   width: 220px;
 
-  &::placeholder {
-    color: #93c5fd;
-    font-weight: 700;
-  }
+  @media (max-width: 900px) { width: 140px; font-size: 0.9rem; }
+  @media (max-width: 600px) { width: 100px; font-size: 0.85rem; }
 
-  &:focus {
-    outline: none;
-    background: #0f1f5c;
-  }
+  &::placeholder { color: #93c5fd; font-weight: 700; }
+  &:focus { outline: none; background: #0f1f5c; }
 }
 
 .main {

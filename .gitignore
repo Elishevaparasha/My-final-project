@@ -10,3 +10,4 @@ packages/
 **/packages/
 appsettings.json
 **/appsettings.json
+.vercel
