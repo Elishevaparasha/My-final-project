@@ -1,17 +1,14 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
-# 1. העתקת כל הפרויקט למערכת הבנייה
+# 1. העתקת כל הקבצים והתיקיות כפי שהם
 COPY . .
 
-# 2. ניווט בנתיב המלא והמדויק לפי התיקיות ב-GitHub
-WORKDIR "/src/C-Main-Project/Project/Web Application"
+# 2. ביצוע Restore ו-Publish באמצעות חיפוש דינמי של קובץ הפרויקט
+RUN dotnet restore **/Web\ Application/*.csproj || dotnet restore **/*.csproj
+RUN dotnet publish **/Web\ Application/*.csproj -c Release -o /app/out || dotnet publish **/*.csproj -c Release -o /app/out
 
-# 3. בניית השרת
-RUN dotnet restore
-RUN dotnet publish -c Release -o /app/out
-
-# שלב ההרצה
+# שלב ההרצה של השרת
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
 COPY --from=build /app/out .
