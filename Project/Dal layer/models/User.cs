@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Dal_layer.Models
+﻿namespace Dal_layer.Models
 {
     public class User
     {
@@ -27,5 +21,3 @@ namespace Dal_layer.Models
         public DateTime CreatedAt { get; set; }
     }
 }
-
-

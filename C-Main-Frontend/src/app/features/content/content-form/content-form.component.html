@@ -1,0 +1,57 @@
+<div class="form-page">
+  <h1>{{ isEdit() ? 'עריכת תוכן' : 'תוכן חדש' }}</h1>
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <label>
+      כותרת
+      <input type="text" formControlName="title" />
+    </label>
+    <label>
+      תיאור
+      <textarea formControlName="description" rows="3"></textarea>
+    </label>
+    <label>
+      סוג
+      <select formControlName="contentType">
+        <option value="Video">וידאו</option>
+        <option value="Article">מאמר</option>
+      </select>
+    </label>
+
+    <label>
+      תאריך יצירה
+      <input type="date" formControlName="uploadDate" />
+    </label>
+
+    @if (form.controls.contentType.value === 'Video') {
+      <label>
+        קישור וידאו
+        <input type="url" formControlName="videoUrl" />
+      </label>
+      <label>
+        אורך (שניות)
+        <input type="number" formControlName="durationSeconds" />
+      </label>
+    }
+
+    @if (form.controls.contentType.value === 'Article') {
+      <label>
+        גוף המאמר
+        <textarea formControlName="body" rows="8"></textarea>
+      </label>
+    }
+
+    <label>
+      תמונת תצוגה (URL)
+      <input type="url" formControlName="thumbnailUrl" />
+    </label>
+
+    @if (error()) {
+      <p class="error">{{ error() }}</p>
+    }
+
+    <div class="actions">
+      <button type="submit" class="btn btn-primary" [disabled]="loading()">שמירה</button>
+      <a routerLink="/videos" class="btn btn-outline">ביטול</a>
+    </div>
+  </form>
+</div>

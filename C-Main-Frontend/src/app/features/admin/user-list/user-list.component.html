@@ -1,0 +1,40 @@
+<h1>ניהול משתמשים</h1>
+
+@if (error()) {
+  <p class="error">{{ error() }}</p>
+} @else {
+  <table class="table">
+    <thead>
+      <tr>
+        <th>שם</th>
+        <th>אימייל</th>
+        <th>תפקיד</th>
+        <th>מנוי</th>
+        <th>פעולות</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (user of users(); track user.id) {
+        <tr>
+          <td>{{ user.firstName }} {{ user.lastName }}</td>
+          <td>{{ user.email }}</td>
+          <td>{{ roleLabel(user.role) }}</td>
+          <td>{{ user.isSubscriber ? 'כן' : 'לא' }}</td>
+          <td class="actions">
+            <button type="button" class="btn btn-outline btn-sm" (click)="toggleSubscription(user)">
+              {{ user.isSubscriber ? 'בטל מנוי' : 'הפוך למנוי' }}
+            </button>
+            @if (user.role !== Role.Admin) {
+              <button type="button" class="btn btn-outline btn-sm" (click)="makeAdmin(user)">
+                הפוך למנהל
+              </button>
+            }
+            <button type="button" class="btn btn-danger btn-sm" (click)="deleteUser(user)">
+              מחיקה
+            </button>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+}

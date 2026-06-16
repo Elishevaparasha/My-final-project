@@ -1,0 +1,77 @@
+<div class="content-area">
+  <div class="toolbar">
+    <div class="toolbar-inner">
+      <input
+        type="search"
+        class="search"
+        [formControl]="searchControl"
+        placeholder="חיפוש לפי כותרת..."
+      />
+      <div class="sort-group">
+        <button class="sort-btn" [class.active]="sortKey() === 'date-desc'" (click)="setSort('date-desc')">חדש</button>
+        <button class="sort-btn" [class.active]="sortKey() === 'date-asc'"  (click)="setSort('date-asc')">ישן</button>
+        <button class="sort-btn" [class.active]="sortKey() === 'title-asc'" (click)="setSort('title-asc')">א-ת</button>
+        <button class="sort-btn" [class.active]="sortKey() === 'title-desc'"(click)="setSort('title-desc')">ת-א</button>
+        <button class="sort-btn star-filter" [class.active]="showStarredOnly()" (click)="toggleStarredFilter()">
+          {{ showStarredOnly() ? '★' : '☆' }} שמורים
+        </button>
+        @if (auth.isAdmin()) {
+          <a routerLink="/content/new" class="sort-btn admin-btn">+ תוכן חדש</a>
+        }
+      </div>
+    </div>
+  </div>
+
+  <div class="page-wrapper">
+    @if (loading()) {
+      <p class="muted">טוען...</p>
+    } @else if (error()) {
+      <p class="error">{{ error() }}</p>
+    } @else if (items().length === 0) {
+      <p class="muted">אין תוכן להצגה</p>
+    } @else {
+      <div class="grid">
+        @for (item of items(); track item.id) {
+          <a [routerLink]="['/content', item.id]" class="card">
+            <button
+              class="star-btn"
+              [class.starred]="localData.isStarred(item.id)"
+              (click)="toggleStar($event, item.id)"
+              title="{{ localData.isStarred(item.id) ? 'הסר מהשמורים' : 'שמור' }}"
+            >{{ localData.isStarred(item.id) ? '★' : '☆' }}</button>
+            @if (item.videoUrl) {
+              <div class="video-thumb">
+                <img [src]="'https://img.youtube.com/vi/' + extractYoutubeId(item.videoUrl) + '/hqdefault.jpg'" [alt]="item.title" />
+                <span class="play-icon">▶</span>
+              </div>
+            } @else {
+              @if (item.title.includes('הורים רבים')) {
+                <img [src]="'/images/1.png'" [alt]="item.title" />
+              } @else if (item.title.includes('ביקורתיים כלפי עצמכם')) {
+                <img [src]="'/images/2.png'" [alt]="item.title" />
+              } @else if (item.title.includes('איך מתחילים להסתכל על אנשים בעין טובה')) {
+                <img [src]="'/images/3.png'" [alt]="item.title" />
+              } @else if (item.title.includes('ממה נובע הרצון שלי להגיע להישגים')) {
+                <img [src]="'/images/5.png'" [alt]="item.title" />
+              } @else if (item.title.includes('כך הופכים שוני לבניין')) {
+                <img [src]="'/images/11.png'" [alt]="item.title" />
+              } @else if (item.title.includes('חרדות או אובססיות')) {
+                <img [src]="'/images/12.png'" [alt]="item.title" />
+              } @else if (item.title.includes('הקושי להיגמל')) {
+                <img [src]="'/images/13.png'" [alt]="item.title" />
+              } @else {
+                <img [src]="'/images/4.png'" [alt]="item.title" />
+              }
+            }
+            <div class="card-body">
+              <span class="badge">{{ item.contentType === 'Video' ? '🎬 וידאו' : '📄 מאמר' }}</span>
+              <h2>{{ item.title }}</h2>
+              <p>{{ item.description }}</p>
+              <span class="card-date">{{ item.uploadDate | date: 'dd/MM/yyyy' }}</span>
+            </div>
+          </a>
+        }
+      </div>
+    }
+  </div>
+</div>

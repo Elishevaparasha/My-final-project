@@ -19,6 +19,7 @@ namespace Bl_layer.API
         void UpdateWatchTime(Guid id, int seconds);
         bool CanWatch(Guid id);
         void MakeAdmin(Guid id);
+        void Subscribe(Guid id);
 
     }
 }

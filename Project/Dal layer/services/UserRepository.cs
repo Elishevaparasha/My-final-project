@@ -1,9 +1,6 @@
 using Dal_layer.API;
 using Dal_layer.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Dal_layer.Services
 {
@@ -16,25 +13,15 @@ namespace Dal_layer.Services
             _context = context;
         }
 
-        public List<User> GetAll()
-        {
-            return _context.Users.ToList();
-        }
+        public List<User> GetAll() => _context.Users.ToList();
 
-        public User GetById(Guid id)
-        {
-            return _context.Users.Find(id);
-        }
+        public User GetById(Guid id) => _context.Users.Find(id);
 
-        public User GetByEmail(string email)
-        {
-            return _context.Users.FirstOrDefault(u => u.Email == email);
-        }
+        public User GetByEmail(string email) =>
+            _context.Users.FirstOrDefault(u => u.Email == email);
 
-        public User GetByVerificationToken(string token)
-        {
-            return _context.Users.FirstOrDefault(u => u.EmailVerificationToken == token);
-        }
+        public User GetByVerificationToken(string token) =>
+            _context.Users.FirstOrDefault(u => u.EmailVerificationToken == token);
 
         public void Add(User u)
         {
@@ -44,13 +31,21 @@ namespace Dal_layer.Services
 
         public void Update(User u)
         {
+            u.CreatedAt = DateTime.SpecifyKind(u.CreatedAt, DateTimeKind.Utc);
+            u.WatchResetDate = DateTime.SpecifyKind(u.WatchResetDate, DateTimeKind.Utc);
+            if (u.LastLoginDate.HasValue)
+                u.LastLoginDate = DateTime.SpecifyKind(u.LastLoginDate.Value, DateTimeKind.Utc);
+            if (u.SubscriptionExpiryDate.HasValue)
+                u.SubscriptionExpiryDate = DateTime.SpecifyKind(u.SubscriptionExpiryDate.Value, DateTimeKind.Utc);
+            if (u.RefreshTokenExpiry.HasValue)
+                u.RefreshTokenExpiry = DateTime.SpecifyKind(u.RefreshTokenExpiry.Value, DateTimeKind.Utc);
             _context.Entry(u).State = EntityState.Modified;
             _context.SaveChanges();
         }
 
         public void Delete(Guid id)
         {
-            User temp = _context.Users.Find(id);
+            var temp = _context.Users.Find(id);
             if (temp != null)
             {
                 _context.Users.Remove(temp);

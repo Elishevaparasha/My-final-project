@@ -8,8 +8,10 @@ namespace Dal_layer
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
         public DbSet<User> Users { get; set; }
+        public DbSet<Content> Contents { get; set; }
         public DbSet<Video> Videos { get; set; }
         public DbSet<Article> Articles { get; set; }
+        public DbSet<Comment> Comments { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -31,8 +33,29 @@ namespace Dal_layer
             modelBuilder.Entity<User>().Property(u => u.EmailVerificationToken).HasColumnName("email_verification_token");
             modelBuilder.Entity<User>().Property(u => u.CreatedAt).HasColumnName("created_at");
 
+            modelBuilder.Entity<Content>().ToTable("contents");
+            modelBuilder.Entity<Content>().Property(c => c.Id).HasColumnName("id");
+            modelBuilder.Entity<Content>().Property(c => c.Title).HasColumnName("title");
+            modelBuilder.Entity<Content>().Property(c => c.Description).HasColumnName("description");
+            modelBuilder.Entity<Content>().Property(c => c.AuthorId).HasColumnName("author_id");
+            modelBuilder.Entity<Content>().Property(c => c.UploadDate).HasColumnName("created_at");
+
             modelBuilder.Entity<Video>().ToTable("videos");
+            modelBuilder.Entity<Video>().Property(v => v.VideoUrl).HasColumnName("video_url");
+            modelBuilder.Entity<Video>().Property(v => v.DurationSeconds).HasColumnName("duration_seconds");
+
             modelBuilder.Entity<Article>().ToTable("articles");
+            modelBuilder.Entity<Article>().Property(a => a.ThumbnailUrl).HasColumnName("thumbnail_url");
+            modelBuilder.Entity<Article>().Property(a => a.Body).HasColumnName("body");
+
+            modelBuilder.Entity<Comment>().ToTable("comments");
+            modelBuilder.Entity<Comment>().Property(c => c.Id).HasColumnName("id");
+            modelBuilder.Entity<Comment>().Property(c => c.ContentId).HasColumnName("content_id");
+            modelBuilder.Entity<Comment>().Property(c => c.ParentId).HasColumnName("parent_id");
+            modelBuilder.Entity<Comment>().Property(c => c.AuthorName).HasColumnName("author_name");
+            modelBuilder.Entity<Comment>().Property(c => c.AuthorId).HasColumnName("author_id");
+            modelBuilder.Entity<Comment>().Property(c => c.Text).HasColumnName("text");
+            modelBuilder.Entity<Comment>().Property(c => c.CreatedAt).HasColumnName("created_at");
         }
     }
 }

@@ -35,7 +35,7 @@ namespace Bl_layer.Services
                 Email = request.Email,
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password),
                 Role = Dal_layer.Models.Role.FreeUser,
-                IsEmailVerified = false,
+                IsEmailVerified = true, // true for dev until SendGrid is configured
                 IsSubscriber = false,
                 MonthlyWatchedSeconds = 0,
                 WatchResetDate = DateTime.UtcNow,
@@ -44,7 +44,14 @@ namespace Bl_layer.Services
             };
 
             _repository.Add(user);
-            _emailService.SendVerificationEmail(user.Email, verificationToken);
+            try
+            {
+                _emailService.SendVerificationEmail(user.Email, verificationToken);
+            }
+            catch
+            {
+                // Registration succeeds even if email provider is not configured yet.
+            }
             return GetById(user.Id);
         }
 
@@ -186,6 +193,15 @@ namespace Bl_layer.Services
             Dal_layer.Models.User user = _repository.GetById(id);
             if (user == null) return;
             user.Role = Dal_layer.Models.Role.Admin;
+            _repository.Update(user);
+        }
+
+        public void Subscribe(Guid id)
+        {
+            Dal_layer.Models.User user = _repository.GetById(id);
+            if (user == null) return;
+            user.IsSubscriber = true;
+            user.SubscriptionExpiryDate = DateTime.UtcNow.AddMonths(1);
             _repository.Update(user);
         }
 

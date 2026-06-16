@@ -1,7 +1,13 @@
 .vs/
+**/.vs/
 bin/
+**/bin/
 obj/
+**/obj/
 *.user
 *.suo
 packages/
+**/packages/
 appsettings.json
+**/appsettings.json
+.vercel

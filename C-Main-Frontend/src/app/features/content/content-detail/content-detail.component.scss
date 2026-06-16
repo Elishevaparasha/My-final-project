@@ -1,0 +1,221 @@
+.detail {
+  background: #0f0f0f;
+  padding: 1.5rem 3rem;
+  margin: 0;
+  color: #fff;
+  text-align: right;
+  direction: rtl;
+  min-height: 100vh;
+}
+
+.actions-top {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.admin-actions { display: flex; gap: 0.5rem; }
+
+.back { color: #93c5fd; text-decoration: none; }
+
+.desc { color: #d1d5db; line-height: 1.6; }
+
+.meta { color: #9ca3af; font-size: 0.9rem; }
+
+// ── Action bar ────────────────────────────────────────
+.action-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 1rem 0 1.5rem;
+}
+
+.action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.45rem 1rem;
+  border-radius: 999px;
+  border: 1px solid #4f4f4f;
+  background: #212121;
+  color: #ffffff;
+  font: inherit;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.15s;
+  &:hover { background: #3f3f3f; color: #ffffff; }
+}
+
+.like-btn.active { background: rgba(239,68,68,0.2); border-color: #ef4444; color: #fca5a5; }
+.star-btn.active { background: rgba(245,158,11,0.2); border-color: #f59e0b; color: #fcd34d; }
+.speech-btn.active { background: rgba(99,102,241,0.25); border-color: #818cf8; color: #a5b4fc; }
+
+.speech-controls { display: flex; align-items: center; gap: 0.5rem; }
+
+.lang-select {
+  padding: 0.4rem 0.6rem;
+  border-radius: 8px;
+  border: 1px solid #4f4f4f;
+  background: #212121;
+  color: #ffffff;
+  font: inherit;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+// ── Video ─────────────────────────────────────────────
+.video-wrap {
+  position: relative;
+  padding-bottom: 56.25%;
+  height: 0;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 0.75rem;
+  iframe {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    border: none;
+  }
+}
+
+.blocked-banner {
+  background: rgba(220,38,38,0.15);
+  border: 1px solid #ef4444;
+  border-radius: 10px;
+  padding: 1.5rem;
+  text-align: center;
+  color: #fca5a5;
+  font-size: 1.05rem;
+  line-height: 1.7;
+  margin: 1rem 0;
+}
+
+.article-body {
+  margin-top: 1.5rem;
+  line-height: 1.8;
+  color: #ffffff;
+  white-space: pre-line;
+}
+
+.article-thumb {
+  width: 60%;
+  height: auto;
+  object-fit: contain;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  display: block;
+}
+
+// ── Badge ─────────────────────────────────────────────
+.badge {
+  display: inline-block;
+  font-size: 0.78rem;
+  padding: 0.2rem 0.6rem;
+  background: var(--nav-blue-light);
+  color: var(--text-muted);
+  border-radius: 4px;
+}
+
+h1 { color: #ffffff; margin: 0.5rem 0; }
+
+// ── Comments ──────────────────────────────────────────
+.comments-section {
+  margin-top: 2.5rem;
+  border-top: 1px solid var(--border);
+  padding-top: 1.5rem;
+}
+
+.comments-title {
+  margin: 0 0 1rem;
+  font-size: 1.1rem;
+  color: #ffffff;
+}
+
+.comment-form, .reply-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  textarea {
+    padding: 0.65rem 0.85rem;
+    border-radius: 8px;
+    border: 1px solid #3f3f3f;
+    background: #212121;
+    color: #ffffff;
+    font: inherit;
+    font-size: 0.95rem;
+    resize: vertical;
+    &::placeholder { color: #9ca3af; }
+    &:focus { outline: 2px solid #93c5fd; }
+  }
+  button { align-self: flex-end; }
+}
+
+.reply-form {
+  margin-top: 0.75rem;
+  margin-right: 1.5rem;
+}
+
+.btn-sm { padding: 0.35rem 0.75rem; font-size: 0.85rem; }
+
+.comment {
+  background: #212121;
+  border: 1px solid #3f3f3f;
+  border-radius: 10px;
+  padding: 0.85rem 1rem;
+  margin-bottom: 0.75rem;
+
+  &.reply {
+    margin-right: 1.5rem;
+    margin-top: 0.5rem;
+    background: #2a2a2a;
+    border-color: #4f4f4f;
+  }
+}
+
+.comment-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.35rem;
+}
+
+.comment-author {
+  font-weight: 700;
+  color: #93c5fd;
+  font-size: 0.9rem;
+}
+
+.comment-date { font-size: 0.78rem; color: #9ca3af; }
+
+.comment-text {
+  margin: 0 0 0.5rem;
+  color: #ffffff;
+  line-height: 1.5;
+  font-size: 0.95rem;
+}
+
+.comment-actions { display: flex; align-items: center; gap: 0.5rem; }
+
+.reply-toggle {
+  background: none;
+  border: none;
+  color: #93c5fd;
+  font: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+  padding: 0;
+  &:hover { text-decoration: underline; }
+}
+
+.del-comment {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.85rem;
+  opacity: 0.6;
+  padding: 0;
+  &:hover { opacity: 1; }
+}

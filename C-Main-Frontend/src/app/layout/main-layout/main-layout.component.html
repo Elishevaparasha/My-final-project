@@ -1,0 +1,40 @@
+<header class="header">
+  <nav class="nav">
+    <a routerLink="/home" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">דף הבית</a>
+    <a routerLink="/videos" routerLinkActive="active">סרטונים</a>
+    <a routerLink="/articles" routerLinkActive="active">כתבות</a>
+    <a routerLink="/books" routerLinkActive="active">ספרים</a>
+    @if (auth.isLoggedIn()) {
+      <a routerLink="/saved" routerLinkActive="active">שמורים</a>
+      <a routerLink="/profile" routerLinkActive="active">פרופיל</a>
+    }
+    @if (auth.isAdmin()) {
+      <a routerLink="/admin/users" routerLinkActive="active">ניהול משתמשים</a>
+      <a routerLink="/content/new" routerLinkActive="active">תוכן חדש</a>
+    }
+  </nav>
+
+  <div class="header-toolbar">
+    <div class="search-wrap">
+      <input
+        type="search"
+        class="search-input"
+        [formControl]="searchControl"
+        placeholder="חיפוש..."
+        (keydown.enter)="onSearch()"
+      />
+    </div>
+    <div class="actions">
+      @if (auth.isLoggedIn()) {
+        <span class="user-name">{{ auth.currentUser()?.firstName }}</span>
+        <button type="button" class="btn btn-nav" (click)="logout()">התנתקות</button>
+      } @else {
+        <a routerLink="/login" class="btn btn-nav">התחברות</a>
+      }
+    </div>
+  </div>
+</header>
+
+<main class="main">
+  <router-outlet />
+</main>

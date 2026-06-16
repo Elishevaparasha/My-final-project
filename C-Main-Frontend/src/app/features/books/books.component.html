@@ -1,0 +1,12 @@
+<div class="books-grid">
+  @for (book of books; track book.title) {
+    <div class="book-card">
+      <img [src]="book.image" [alt]="book.title" />
+      <div class="book-info">
+        <p class="book-title">{{ book.title }}</p>
+        <p class="book-price">67 ₪</p>
+        <p class="available">ניתן להשיג בחנויות הספרים המובחרות</p>
+      </div>
+    </div>
+  }
+</div>
