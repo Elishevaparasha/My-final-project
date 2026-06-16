@@ -4,9 +4,8 @@ WORKDIR /src
 # 1. העתקת כל התיקיות והקבצים לפלטפורמת הבנייה
 COPY . .
 
-# 2. מעבר לתיקייה המדויקת שבה נמצא קובץ ה-csproj
-# שימי לב: אות קטנה ב-project, ורווח בשם התיקייה כפי שמופיע אצלך
-WORKDIR "/src/project/Web Application"
+# 2. מעבר לתיקייה המדויקת - עם P גדולה ורווח בשם התיקייה
+WORKDIR "/src/Project/Web Application"
 
 # 3. ביצוע ה-Restore וה-Publish מתוך התיקייה הנכונה
 RUN dotnet restore
