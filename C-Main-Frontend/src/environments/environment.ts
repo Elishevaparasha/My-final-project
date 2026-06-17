@@ -1,4 +1,5 @@
 export const environment = {
-  production: false,
-// במקום מה שיש עכשיו, תשני לזה:
-apiUrl: 'https://my-final-project-bl7j.onrender.com' };
+  production: true,
+  // שימי לב: הכתובת מסתיימת ב-api בלי סלאש בסוף!
+  baseUrl: 'https://my-final-project-bl7j.onrender.com/api' 
+};

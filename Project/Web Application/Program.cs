@@ -68,9 +68,12 @@ builder.Services.AddScoped<IContentController, ContentControllerService>();
 
 var app = builder.Build();
 
-// הגדרת קבצים סטטיים של אנגולר בראש הצינור
+// מציג את הקבצים הסטטיים של אנגולר ישירות מתיקיית wwwroot
 app.UseDefaultFiles();
 app.UseStaticFiles();
+
+// דואג שכל ניתוב של עמוד (כמו התחברות, סרטונים וכו') יחזור ל-index.html של אנגולר
+app.MapFallbackToFile("index.html");
 
 // הפעלת Swagger ב-Production (בשביל Render)
 app.UseSwagger();
