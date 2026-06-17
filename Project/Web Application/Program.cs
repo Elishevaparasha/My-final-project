@@ -69,19 +69,9 @@ builder.Services.AddScoped<IContentController, ContentControllerService>();
 var app = builder.Build();
     app.UseSwagger();
     app.UseSwaggerUI();
-// הגדרה מדויקת לתיקיית אנגולר החדשה
-var staticFileOptions = new StaticFileOptions
-{
-    FileProvider = new Microsoft.Extensions.FileProviders.PhysicalFileProvider(
-        Path.Combine(builder.Environment.ContentRootPath, "wwwroot", "browser"))
-};
-
-app.UseDefaultFiles(new DefaultFilesOptions
-{
-    FileProvider = staticFileOptions.FileProvider
-});
-
-app.UseStaticFiles(staticFileOptions);
+// מחזיר את השרת לניהול קבצים רגיל ובטוח בלי לקרוס
+app.UseDefaultFiles();
+app.UseStaticFiles();
 
 
 if (app.Environment.IsDevelopment())
