@@ -69,8 +69,19 @@ builder.Services.AddScoped<IContentController, ContentControllerService>();
 var app = builder.Build();
     app.UseSwagger();
     app.UseSwaggerUI();
-    app.UseDefaultFiles();
-    app.UseStaticFiles();
+// הגדרה מדויקת לתיקיית אנגולר החדשה
+var staticFileOptions = new StaticFileOptions
+{
+    FileProvider = new Microsoft.Extensions.FileProviders.PhysicalFileProvider(
+        Path.Combine(builder.Environment.ContentRootPath, "wwwroot", "browser"))
+};
+
+app.UseDefaultFiles(new DefaultFilesOptions
+{
+    FileProvider = staticFileOptions.FileProvider
+});
+
+app.UseStaticFiles(staticFileOptions);
 
 
 if (app.Environment.IsDevelopment())
