@@ -67,8 +67,8 @@ builder.Services.AddScoped<ITranslationService, TranslationService>();
 builder.Services.AddScoped<IContentController, ContentControllerService>();
 
 var app = builder.Build();
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    // app.UseSwagger();
+    // app.UseSwaggerUI();
 // מחזיר את השרת לניהול קבצים רגיל ובטוח בלי לקרוס
 app.UseDefaultFiles();
 app.UseStaticFiles();
