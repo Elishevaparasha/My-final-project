@@ -68,12 +68,12 @@ builder.Services.AddScoped<ITranslationService, TranslationService>();
 builder.Services.AddScoped<IContentController, ContentControllerService>();
 
 var app = builder.Build();
-
-if (app.Environment.IsDevelopment())
-{
     app.UseSwagger();
     app.UseSwaggerUI();
-}
+
+// if (app.Environment.IsDevelopment())
+// {
+// }
 
 using (var scope = app.Services.CreateScope())
 {
