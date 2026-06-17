@@ -12,7 +12,8 @@ using Web_Application.Api;
 using Web_Application.Services;
 
 var builder = WebApplication.CreateBuilder(args);
-
+app.UseDefaultFiles(); // גורם לשרת לחפש אוטומטית את index.html
+app.UseStaticFiles();  // מאפשר לשרת להציג קבצים מתוך תיקיית wwwroot
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
