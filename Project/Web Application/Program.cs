@@ -70,6 +70,8 @@ builder.Services.AddScoped<IContentController, ContentControllerService>();
 var app = builder.Build();
     app.UseSwagger();
     app.UseSwaggerUI();
+    app.UseDefaultFiles();
+    app.UseStaticFiles();
 
 if (app.Environment.IsDevelopment())
 {
