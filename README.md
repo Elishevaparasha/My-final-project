@@ -53,12 +53,19 @@ Project/Web Application/appsettings.example.json → appsettings.json
   "JwtSecretKey": "<מפתח-סודי-ארוך>",
   "Email": {
     "ApiKey": "<sendgrid-api-key>",
-    "FromEmail": "<שולח@domain.com>",
+    "FromEmail": "<שולח-מאומת@domain.com>",
     "FromName": "אתר המרצה",
-    "BaseUrl": "https://localhost:7245"
+    "FrontendUrl": "http://localhost:4200"
   }
 }
 ```
+
+### הגדרת SendGrid (חובה לשליחת מיילים אמיתיים)
+1. הירשמי ב-[SendGrid](https://app.sendgrid.com) (דרך Twilio).
+2. **Settings → API Keys → Create API Key** עם הרשאת *Mail Send* — העתיקי את המפתח (מתחיל ב-`SG.`).
+3. **Settings → Sender Authentication** — אמתי כתובת שולח (Single Sender) או דומיין.
+4. שימי את המפתח ואת כתובת השולח המאומתת ב-`Project/Web Application/appsettings.json` תחת `Email:ApiKey` ו-`Email:FromEmail`.
+5. הפעילי מחדש את השרת (`dotnet run`).
 
 הרץ את השרת:
 ```bash

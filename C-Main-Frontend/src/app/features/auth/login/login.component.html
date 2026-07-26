@@ -17,7 +17,12 @@
     </button>
   </form>
   <p class="links">
-    <a routerLink="/forgot-password">שכחתי סיסמה</a>
+    <a
+      routerLink="/forgot-password"
+      [queryParams]="form.controls.email.value ? { email: form.controls.email.value } : {}"
+    >
+      שכחתי סיסמה
+    </a>
     ·
     <a routerLink="/register">משתמש חדש? הרשמה</a>
   </p>

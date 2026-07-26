@@ -18,7 +18,16 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddHttpClient();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseNpgsql(
+        builder.Configuration.GetConnectionString("DefaultConnection"),
+        npgsql =>
+        {
+            npgsql.EnableRetryOnFailure(
+                maxRetryCount: 5,
+                maxRetryDelay: TimeSpan.FromSeconds(5),
+                errorCodesToAdd: null);
+            npgsql.CommandTimeout(60);
+        }));
 
 var jwtKey = builder.Configuration["JwtSecretKey"] ?? "";
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
