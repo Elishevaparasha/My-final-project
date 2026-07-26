@@ -30,7 +30,13 @@ namespace Web_Application.Controllers
         public IActionResult Login([FromBody] LoginRequest request)
         {
             string token = _userService.Login(request);
-            if (token == null) return BadRequest("מייל או סיסמה שגויים");
+            if (token == null)
+            {
+                UserResponse existing = _userService.GetByEmail(request.Email);
+                if (existing != null && !existing.IsEmailVerified)
+                    return BadRequest("יש לאמת את המייל לפני ההתחברות. בדקי את תיבת הדואר.");
+                return BadRequest("מייל או סיסמה שגויים");
+            }
             UserResponse user = _userService.GetByEmail(request.Email);
             return Ok(new LoginResponse { Token = token, User = user });
         }
@@ -43,11 +49,27 @@ namespace Web_Application.Controllers
             return Ok("המייל אומת בהצלחה");
         }
 
+        [HttpPost("request-password-reset")]
+        public IActionResult RequestPasswordReset([FromBody] RequestPasswordResetRequest request)
+        {
+            try
+            {
+                bool found = _userService.RequestPasswordReset(request.Email);
+                if (!found)
+                    return BadRequest("המייל הזה לא רשום במערכת. בדקי את הכתובת או הירשמי תחילה.");
+                return Ok("נשלח קוד איפוס למייל שהוזן");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"שליחת המייל נכשלה: {ex.Message}");
+            }
+        }
+
         [HttpPost("forgot-password")]
         public IActionResult ForgotPassword([FromBody] ForgotPasswordRequest request)
         {
             bool result = _userService.ForgotPassword(request);
-            if (!result) return BadRequest("הפרטים שהוזנו שגויים");
+            if (!result) return BadRequest("הקוד שגוי או שפג תוקפו");
             return Ok("הסיסמה שונתה בהצלחה");
         }
         [Authorize]

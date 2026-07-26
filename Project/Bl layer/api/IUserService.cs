@@ -9,6 +9,7 @@ namespace Bl_layer.API
         UserResponse Register(RegisterRequest request);
         string Login(LoginRequest request);
         bool VerifyEmail(string token);
+        bool RequestPasswordReset(string email);
         bool ForgotPassword(ForgotPasswordRequest request);
         bool ChangePassword(ChangePasswordRequest request);
         UserResponse GetById(Guid id);

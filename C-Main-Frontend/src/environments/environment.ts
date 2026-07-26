@@ -1,4 +1,4 @@
 export const environment = {
-  production: false,
-  apiUrl: 'http://localhost:5117/api',
+  production: true,
+  apiUrl: 'https://my-final-project-bl7j.onrender.com/api',
 };

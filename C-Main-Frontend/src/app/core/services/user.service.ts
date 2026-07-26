@@ -4,6 +4,7 @@ import { environment } from '../../../environments/environment';
 import {
   ChangePasswordRequest,
   ForgotPasswordRequest,
+  RequestPasswordResetRequest,
   UserResponse,
 } from '../models/api.models';
 
@@ -59,6 +60,12 @@ export class UserService {
 
   changePassword(request: ChangePasswordRequest) {
     return this.http.post(`${this.baseUrl}/change-password`, request, {
+      responseType: 'text',
+    });
+  }
+
+  requestPasswordReset(request: RequestPasswordResetRequest) {
+    return this.http.post(`${this.baseUrl}/request-password-reset`, request, {
       responseType: 'text',
     });
   }

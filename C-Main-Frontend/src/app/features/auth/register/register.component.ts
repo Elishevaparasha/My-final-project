@@ -39,7 +39,7 @@ export class RegisterComponent {
     this.auth.register(this.form.getRawValue()).subscribe({
       next: () => {
         this.loading.set(false);
-        this.success.set('נרשמת בהצלחה! בדקי את המייל לאימות.');
+        this.success.set('נרשמת בהצלחה! מעבירים אותך להתחברות.');
         setTimeout(() => this.router.navigate(['/login']), 2500);
       },
       error: (err) => {

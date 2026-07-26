@@ -17,8 +17,27 @@ namespace Dal_layer.Services
 
         public User GetById(Guid id) => _context.Users.Find(id);
 
-        public User GetByEmail(string email) =>
-            _context.Users.FirstOrDefault(u => u.Email == email);
+        public User GetByEmail(string email)
+        {
+            string normalized = (email ?? "").Trim().ToLowerInvariant();
+            const int maxAttempts = 3;
+            for (int attempt = 1; attempt <= maxAttempts; attempt++)
+            {
+                try
+                {
+                    return _context.Users.AsNoTracking()
+                        .FirstOrDefault(u => u.Email.ToLower() == normalized);
+                }
+                catch when (attempt < maxAttempts)
+                {
+                    System.Threading.Thread.Sleep(400 * attempt);
+                    _context.ChangeTracker.Clear();
+                }
+            }
+
+            return _context.Users.AsNoTracking()
+                .FirstOrDefault(u => u.Email.ToLower() == normalized);
+        }
 
         public User GetByVerificationToken(string token) =>
             _context.Users.FirstOrDefault(u => u.EmailVerificationToken == token);

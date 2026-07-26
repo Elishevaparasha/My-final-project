@@ -32,10 +32,11 @@ namespace Bl_layer.Services
                 UserName = request.UserName,
                 FirstName = request.FirstName,
                 LastName = request.LastName,
-                Email = request.Email,
+                Email = request.Email.Trim().ToLowerInvariant(),
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password),
                 Role = Dal_layer.Models.Role.FreeUser,
-                IsEmailVerified = true, // true for dev until SendGrid is configured
+                // Allow login immediately; verification email is best-effort until SendGrid sender is verified.
+                IsEmailVerified = true,
                 IsSubscriber = false,
                 MonthlyWatchedSeconds = 0,
                 WatchResetDate = DateTime.UtcNow,
@@ -50,7 +51,7 @@ namespace Bl_layer.Services
             }
             catch
             {
-                // Registration succeeds even if email provider is not configured yet.
+                // Do not block registration if email delivery fails.
             }
             return GetById(user.Id);
         }
@@ -63,13 +64,20 @@ namespace Bl_layer.Services
             if (!BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash)) return null;
             if (!user.IsEmailVerified) return null;
 
+            // After long inactivity: notify by email, but do not block login.
             if (user.LastLoginDate.HasValue)
             {
                 TimeSpan diff = DateTime.UtcNow - user.LastLoginDate.Value;
                 if (diff.TotalDays > 7)
                 {
-                    _emailService.SendLoginVerificationEmail(user.Email);
-                    return null;
+                    try
+                    {
+                        _emailService.SendLoginVerificationEmail(user.Email);
+                    }
+                    catch
+                    {
+                        // Login must succeed even if the email provider is temporarily down.
+                    }
                 }
             }
             user.LastLoginDate = DateTime.UtcNow;
@@ -88,15 +96,46 @@ namespace Bl_layer.Services
             return true;
         }
 
+        public bool RequestPasswordReset(string email)
+        {
+            Dal_layer.Models.User user = _repository.GetByEmail(email);
+            if (user == null)
+            {
+                Console.WriteLine($"[password-reset] no account for '{email?.Trim()}'");
+                return false;
+            }
+
+            string code = Random.Shared.Next(100000, 999999).ToString();
+            user.RefreshToken = code;
+            user.RefreshTokenExpiry = DateTime.UtcNow.AddMinutes(30);
+            _repository.Update(user);
+
+            // Must reach THIS user's inbox — not the site's FromEmail.
+            _emailService.SendPasswordResetCodeEmail(user.Email, code);
+            return true;
+        }
+
         public bool ForgotPassword(ForgotPasswordRequest request)
         {
             Dal_layer.Models.User user = _repository.GetByEmail(request.Email);
             if (user == null) return false;
-            if (user.RefreshToken != request.ResetToken) return false;
+            if (string.IsNullOrWhiteSpace(user.RefreshToken)) return false;
+            if (user.RefreshToken != request.ResetToken?.Trim()) return false;
+            if (!user.RefreshTokenExpiry.HasValue || user.RefreshTokenExpiry.Value < DateTime.UtcNow) return false;
+
             user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.NewPassword);
             user.RefreshToken = null;
+            user.RefreshTokenExpiry = null;
             _repository.Update(user);
-            _emailService.SendPasswordResetEmail(request.Email);
+
+            try
+            {
+                _emailService.SendPasswordResetEmail(request.Email);
+            }
+            catch
+            {
+                // Password changed; confirmation email is best-effort.
+            }
             return true;
         }
 
