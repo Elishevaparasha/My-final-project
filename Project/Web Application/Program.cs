@@ -18,18 +18,50 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddHttpClient();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(
-        builder.Configuration.GetConnectionString("DefaultConnection"),
-        npgsql =>
-        {
-            npgsql.EnableRetryOnFailure(
-                maxRetryCount: 5,
-                maxRetryDelay: TimeSpan.FromSeconds(5),
-                errorCodesToAdd: null);
-            npgsql.CommandTimeout(60);
-        }));
+{
+    var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
+    if (!string.IsNullOrWhiteSpace(databaseUrl))
+    {
+        options.UseNpgsql(ToNpgsqlConnectionString(databaseUrl), ConfigureNpgsql);
+        return;
+    }
 
-var jwtKey = builder.Configuration["JwtSecretKey"] ?? "";
+    if (builder.Environment.IsDevelopment())
+    {
+        options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"), ConfigureNpgsql);
+        return;
+    }
+
+    // Render (and similar hosts) can run without a cloud Postgres.
+    // Content and the default admin are seeded on startup.
+    options.UseSqlite("Data Source=cmain.db");
+});
+
+static void ConfigureNpgsql(Npgsql.EntityFrameworkCore.PostgreSQL.Infrastructure.NpgsqlDbContextOptionsBuilder npgsql)
+{
+    npgsql.EnableRetryOnFailure(
+        maxRetryCount: 5,
+        maxRetryDelay: TimeSpan.FromSeconds(5),
+        errorCodesToAdd: null);
+    npgsql.CommandTimeout(60);
+}
+
+static string ToNpgsqlConnectionString(string databaseUrl)
+{
+    var uri = new Uri(databaseUrl);
+    var userInfo = uri.UserInfo.Split(':', 2);
+    var database = uri.AbsolutePath.Trim('/');
+    var port = uri.Port > 0 ? uri.Port : 5432;
+    var user = Uri.UnescapeDataString(userInfo[0]);
+    var password = userInfo.Length > 1 ? Uri.UnescapeDataString(userInfo[1]) : "";
+    return $"Host={uri.Host};Port={port};Database={database};Username={user};Password={password};SSL Mode=Require;Trust Server Certificate=true";
+}
+
+var jwtKey = builder.Configuration["JwtSecretKey"];
+if (string.IsNullOrWhiteSpace(jwtKey) || jwtKey.Length < 32)
+{
+    jwtKey = "DevSecretKey_ChangeMe_UseAtLeast32Characters!";
+}
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -55,7 +87,8 @@ builder.Services.AddCors(options =>
         policy.WithOrigins(
                 "http://localhost:4200",
                 "http://localhost:4300",
-                "http://localhost:5117"
+                "http://localhost:5117",
+                "https://my-final-project-bl7j.onrender.com"
                )
               .AllowAnyHeader()
               .AllowAnyMethod());
@@ -187,10 +220,6 @@ using (var scope = app.Services.CreateScope())
     db.SaveChanges();
 }
 
-if (!app.Environment.IsDevelopment())
-{
-    app.UseHttpsRedirection();
-}
 app.UseCors("Frontend");
 app.UseAuthentication();
 app.UseAuthorization();
