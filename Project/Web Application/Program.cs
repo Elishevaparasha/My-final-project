@@ -92,6 +92,7 @@ app.UseSwaggerUI(c =>
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    db.Database.EnsureCreated();
 
     // הוספת מנהלת (שיפי) אם לא קיימת
     var adminEmail = "shifi@admin.com";
@@ -186,7 +187,10 @@ using (var scope = app.Services.CreateScope())
     db.SaveChanges();
 }
 
-app.UseHttpsRedirection();
+if (!app.Environment.IsDevelopment())
+{
+    app.UseHttpsRedirection();
+}
 app.UseCors("Frontend");
 app.UseAuthentication();
 app.UseAuthorization();
