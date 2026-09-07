@@ -81,9 +81,6 @@ var app = builder.Build();
 app.UseDefaultFiles();
 app.UseStaticFiles();
 
-// דואג שכל ניתוב של עמוד (כמו התחברות, סרטונים וכו') יחזור ל-index.html של אנגולר
-app.MapFallbackToFile("index.html");
-
 // הפעלת Swagger ב-Production (בשביל Render)
 app.UseSwagger();
 app.UseSwaggerUI(c =>
@@ -95,6 +92,7 @@ app.UseSwaggerUI(c =>
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    db.Database.EnsureCreated();
 
     // הוספת מנהלת (שיפי) אם לא קיימת
     var adminEmail = "shifi@admin.com";
@@ -189,7 +187,10 @@ using (var scope = app.Services.CreateScope())
     db.SaveChanges();
 }
 
-app.UseHttpsRedirection();
+if (!app.Environment.IsDevelopment())
+{
+    app.UseHttpsRedirection();
+}
 app.UseCors("Frontend");
 app.UseAuthentication();
 app.UseAuthorization();
