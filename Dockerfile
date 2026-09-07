@@ -1,18 +1,21 @@
+FROM node:20-alpine AS frontend
+WORKDIR /frontend
+COPY C-Main-Frontend/package.json C-Main-Frontend/package-lock.json ./
+RUN npm ci
+COPY C-Main-Frontend/ ./
+RUN npx ng build --configuration production
+
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
+COPY Project ./Project
+COPY --from=frontend /frontend/dist/c-main-frontend/browser "./Project/Web Application/wwwroot"
+RUN dotnet restore "./Project/Web Application/Server.csproj"
+RUN dotnet publish "./Project/Web Application/Server.csproj" -c Release -o /app/out
 
-# 1. העתקת כל הקבצים לפרויקט
-COPY . .
-
-# 2. בנייה ופרסום של הפרויקט כולו (כולל wwwroot שיושב בפנים)
-RUN dotnet restore **/Web\ Application/*.csproj || dotnet restore **/*.csproj
-RUN dotnet publish **/Web\ Application/*.csproj -c Release -o /app/out --no-restore || dotnet publish **/*.csproj -c Release -o /app/out --no-restore
-
-# שלב ההרצה
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
 COPY --from=build /app/out .
 ENV ASPNETCORE_URLS=http://0.0.0.0:8080
+ENV ASPNETCORE_ENVIRONMENT=Production
 EXPOSE 8080
-
 ENTRYPOINT ["dotnet", "Server.dll"]
